@@ -1,0 +1,3029 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>مشهد گستر ادمین | سامانه خدمات فنی</title>
+  <meta name="theme-color" content="#f5f2eb" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+
+  <!-- فونت فارسی Vazirmatn و Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- GSAP برای انیمیشن‌های روان و کپسول لغزنده منو -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Vazirmatn', 'Inter', 'sans-serif'],
+          },
+          colors: {
+            cream: {
+              50: '#FDFCFB',
+              100: '#F6F4EE',
+              200: '#EAE6DC',
+              300: '#DDD7C8',
+            },
+            gold: {
+              300: '#E7CFA1',
+              400: '#D8B773',
+              500: '#C5A059',
+              600: '#A8843E',
+              700: '#8A6A2B',
+            },
+            emeraldLux: {
+              500: '#126E5B',
+              600: '#0F5243',
+              700: '#0A3B30',
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #F5F2EB;
+      --bg-glass: rgba(255, 255, 255, 0.78);
+      --bg-glass-strong: rgba(255, 255, 255, 0.96);
+      --text-main: #18181B;
+      --text-muted: #5E5E68;
+      --border-gold: rgba(197, 160, 89, 0.34);
+      --shadow-glass: 0 18px 40px -14px rgba(24, 24, 27, 0.08), 0 4px 14px -4px rgba(197, 160, 89, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+    }
+    html.dark {
+      --bg-primary: #090A0F;
+      --bg-glass: rgba(20, 22, 30, 0.78);
+      --bg-glass-strong: rgba(22, 25, 34, 0.96);
+      --text-main: #F4F3EF;
+      --text-muted: #9CA3AF;
+      --border-gold: rgba(197, 160, 89, 0.36);
+      --shadow-glass: 0 22px 48px -12px rgba(0, 0, 0, 0.72), 0 4px 18px -4px rgba(197, 160, 89, 0.14), inset 0 1px 1px rgba(255, 255, 255, 0.08);
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Vazirmatn', 'Inter', sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      overflow-x: hidden;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    body.modal-open { overflow: hidden !important; }
+
+    /* پنل‌های شیشه‌ای مطابق زبان طراحی مشهد گستر */
+    .glass-panel {
+      background: var(--bg-glass);
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      border: 1px solid var(--border-gold);
+      box-shadow: var(--shadow-glass);
+      transition: border-color 0.22s ease, box-shadow 0.22s ease, transform 0.18s ease;
+    }
+    .glass-panel:hover { border-color: rgba(197, 160, 89, 0.56); }
+    .glass-strong {
+      background: var(--bg-glass-strong);
+      backdrop-filter: blur(26px) saturate(180%);
+      -webkit-backdrop-filter: blur(26px) saturate(180%);
+      border: 1px solid var(--border-gold);
+      box-shadow: var(--shadow-glass);
+    }
+
+    .gold-gradient { background: linear-gradient(135deg, #E7CFA1 0%, #C5A059 50%, #967330 100%); }
+    .emerald-gradient { background: linear-gradient(135deg, #168069 0%, #0F5243 100%); }
+
+    /* هدر کپسولی شناور top-shell */
+    .top-shell {
+      position: sticky; top: 8px; z-index: 130;
+      display: grid; grid-template-columns: auto minmax(0, 1fr) auto;
+      grid-template-areas: 'brand nav actions';
+      gap: 10px; align-items: center;
+      padding: 8px 14px; margin-bottom: 14px;
+      border: 1px solid rgba(197, 160, 89, 0.32);
+      border-radius: 22px;
+      background: rgba(250, 253, 254, 0.86);
+      box-shadow: 0 8px 24px rgba(32, 52, 62, 0.09);
+      backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px);
+    }
+    .dark .top-shell { background: rgba(25, 27, 34, 0.9); color: #f5f5f5; }
+    .top-brand {
+      grid-area: brand; font-weight: 900; font-size: 14px; white-space: nowrap;
+      color: #816528; display: flex; align-items: center; gap: 8px;
+    }
+    .dark .top-brand { color: #E7CFA1; }
+    #top-nav-slot { grid-area: nav; min-width: 0; width: 100%; }
+    .module-nav-wrap { width: 100%; overflow-x: auto; scrollbar-width: none; position: relative; }
+    .module-nav-wrap::-webkit-scrollbar { display: none; }
+    .module-nav {
+      position: relative; display: flex; align-items: center; justify-content: center;
+      gap: 4px; min-width: max-content; margin: 0 auto; padding: 2px;
+    }
+    /* کپسول لغزنده GSAP در هدر */
+    #nav-sliding-pill {
+      position: absolute; top: 2px; bottom: 2px; left: 0; width: 0;
+      border-radius: 14px; z-index: 0; pointer-events: none;
+      background: linear-gradient(135deg, #E7CFA1 0%, #C5A059 50%, #967330 100%);
+      box-shadow: 0 4px 12px rgba(197, 160, 89, 0.35);
+    }
+    .module-nav .nav-tab-btn {
+      position: relative; z-index: 1;
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 8px 13px; border-radius: 14px; font-size: 12px; font-weight: 800;
+      white-space: nowrap; transition: color 0.2s ease, transform 0.15s ease;
+    }
+    .module-nav .nav-tab-btn:active { transform: scale(0.96); }
+    .module-nav .nav-count {
+      font-size: 10px; font-weight: 900; border-radius: 999px;
+      padding: 1px 6px; background: #e9e2ce; color: #756024; line-height: 1.3;
+    }
+    .module-nav .nav-tab-btn.is-active .nav-count { background: rgba(24, 24, 27, 0.16); color: #18181B; }
+
+    .top-actions { grid-area: actions; display: flex; align-items: center; gap: 6px; }
+    .top-menu { position: relative; }
+    .top-menu summary {
+      width: 40px; height: 40px; display: grid; place-items: center; cursor: pointer; list-style: none;
+      border-radius: 50%; background: rgba(255, 255, 255, 0.88);
+      border: 2.5px solid var(--tier-ring, #C5A059);
+      box-shadow: 0 0 14px var(--tier-glow, rgba(197, 160, 89, 0.35));
+      transition: transform 0.2s ease; overflow: visible; position: relative;
+    }
+    .top-menu summary:hover { transform: scale(1.05); }
+    .top-menu summary::-webkit-details-marker { display: none; }
+    .dark .top-menu summary { background: #303136; }
+    .top-menu-content {
+      position: absolute; left: 0; top: 48px; min-width: 225px;
+      display: flex; flex-direction: column; gap: 6px; padding: 11px;
+      border-radius: 20px; background: var(--bg-glass-strong);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.22);
+      border: 1px solid rgba(197, 160, 89, 0.38); z-index: 180;
+    }
+
+    /* حلقه رنگی محرمانه دور پروفایل */
+    .avatar-glow {
+      border: 3px solid var(--tier-ring, #9CA3AF);
+      box-shadow: 0 0 16px var(--tier-glow, rgba(156, 163, 175, 0.35));
+    }
+
+    /* استایل پنجره پروفایل مطابق نرم‌افزار فروش مشهد گستر */
+    .mg-profile-hero {
+      display: flex; align-items: center; gap: 16px; padding: 16px;
+      border-radius: 20px;
+      background: linear-gradient(120deg, rgba(212, 173, 92, 0.22), rgba(255, 248, 232, 0.45));
+      border: 1px solid rgba(198, 169, 104, 0.42);
+    }
+    .dark .mg-profile-hero {
+      background: linear-gradient(120deg, rgba(197, 160, 89, 0.16), rgba(24, 24, 27, 0.65));
+    }
+    .mg-profile-avatar {
+      width: 72px; height: 72px; border-radius: 50%; overflow: hidden;
+      display: grid; place-items: center;
+      background: linear-gradient(135deg, #E7CFA1 0%, #C5A059 50%, #967330 100%);
+      color: #18181B; font-size: 26px; font-weight: 900; flex: none;
+    }
+    .mg-profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .mg-profile-role {
+      display: inline-block; padding: 3px 10px; border-radius: 20px;
+      background: rgba(201, 162, 88, 0.22); font-size: 11px; font-weight: 800;
+    }
+    .mg-profile-section {
+      padding: 15px; border-radius: 18px;
+      border: 1px solid rgba(214, 201, 170, 0.48); background: rgba(255, 247, 232, 0.16);
+    }
+    .dark .mg-profile-section {
+      border-color: rgba(197, 160, 89, 0.24); background: rgba(24, 24, 27, 0.55);
+    }
+    .mg-profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    @media (max-width: 430px) { .mg-profile-grid { grid-template-columns: 1fr; } }
+
+    @media (max-width: 768px) {
+      .top-shell {
+        grid-template-columns: 1fr auto;
+        grid-template-areas: 'brand actions' 'nav nav';
+        gap: 6px; padding: 7px 9px;
+      }
+      .top-brand { font-size: 13px; }
+      .module-nav { justify-content: flex-start; width: 100%; }
+      .module-nav .nav-tab-btn { padding: 7px 9px; font-size: 11px; }
+      .top-menu summary { width: 36px; height: 36px; }
+      .top-menu-content { top: 44px; }
+    }
+
+    /* سوییچ تم روشن / تیره */
+    .mg-theme-switch {
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      padding: 7px 10px; border-radius: 13px; background: #eee9df;
+      font-size: 11px; font-weight: 800; color: #34332e;
+    }
+    .dark .mg-theme-switch { background: #303136; color: #ffffff; }
+    .mg-theme-track { display: block; width: 48px; height: 24px; border-radius: 30px; background: #d5b671; position: relative; }
+    .mg-theme-knob {
+      position: absolute; left: 3px; top: 3px; width: 18px; height: 18px; border-radius: 50%;
+      background: white; display: grid; place-items: center; color: #b88418; font-size: 10px; transition: transform 0.25s ease;
+    }
+    .dark .mg-theme-knob { transform: translateX(24px); color: #343c5a; }
+    .mg-theme-moon { display: none; }
+    .dark .mg-theme-sun { display: none; }
+    .dark .mg-theme-moon { display: inline; }
+
+    /* کادر جستجو */
+    #v5-global-search {
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(248, 246, 239, 0.95), rgba(233, 229, 218, 0.95));
+      border: 1px solid rgba(197, 160, 89, 0.42);
+    }
+    .dark #v5-global-search { background: rgba(24, 24, 27, 0.92); color: #F4F3EF; }
+    #v5-global-search:focus { border-color: #b48f46; box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.2); outline: none; }
+
+    @keyframes modalSpring {
+      from { opacity: 0; transform: translateY(14px) scale(0.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .modal-spring { animation: modalSpring 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .kpi-card-link { cursor: pointer; transition: transform 0.18s ease, border-color 0.2s ease; }
+    .kpi-card-link:hover { transform: translateY(-2px); border-color: rgba(197, 160, 89, 0.75) !important; }
+
+    /* پرده لودینگ درصدی */
+    .vs-counter-curtain {
+      --vs-counter-curtain-bg: #f5f2eb; --vs-counter-curtain-ink: #18181b;
+      --vs-counter-curtain-empty: rgb(24 24 27 / 0.14);
+      --vs-counter-curtain-size: clamp(5rem, 24vw, 13rem); --p: 0;
+      position: fixed; inset: 0; z-index: 1000;
+    }
+    html.dark .vs-counter-curtain {
+      --vs-counter-curtain-bg: #090a0f; --vs-counter-curtain-ink: #f4f3ef; --vs-counter-curtain-empty: rgb(244 243 239 / 0.14);
+    }
+    .vs-counter-curtain.is-gone { visibility: hidden; pointer-events: none; }
+    .vs-counter-curtain-panel {
+      position: absolute; inset: 0; background: var(--vs-counter-curtain-bg);
+      color: var(--vs-counter-curtain-ink); display: grid; place-items: center;
+    }
+    .vs-counter-curtain-num {
+      display: inline-flex; align-items: baseline; line-height: 1;
+      font: 900 var(--vs-counter-curtain-size)/1 'Vazirmatn', sans-serif; font-variant-numeric: tabular-nums;
+    }
+    .vs-counter-curtain-fill {
+      display: inline-block;
+      background: linear-gradient(to top, var(--vs-counter-curtain-ink) calc(var(--p) * 100%), var(--vs-counter-curtain-empty) calc(var(--p) * 100%));
+      -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
+    }
+    .vs-counter-curtain-pct { font-size: 0.34em; margin-right: 0.08em; opacity: 0.7; -webkit-text-fill-color: currentColor; }
+    .vs-counter-curtain-label { position: absolute; bottom: 32px; font-size: 12px; font-weight: 800; opacity: 0.65; }
+    .vs-counter-curtain-line {
+      position: absolute; left: 0; right: 0; bottom: 0; height: 3px;
+      background: linear-gradient(90deg, #C5A059, #126E5B); transform-origin: 100% 50%; transform: scaleX(var(--p));
+    }
+
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-thumb { background: rgba(197, 160, 89, 0.45); border-radius: 9999px; }
+  </style>
+</head>
+<body class="min-h-screen pb-14 selection:bg-gold-500 selection:text-zinc-950">
+
+  <!-- پرده لودینگ درصدی -->
+  <div class="vs-counter-curtain" id="vs-counter-curtain" role="progressbar" aria-label="بارگذاری" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+    <div class="vs-counter-curtain-panel">
+      <span class="vs-counter-curtain-num" aria-hidden="true">
+        <span class="vs-counter-curtain-fill">
+          <span class="vs-counter-curtain-digits">0</span><span class="vs-counter-curtain-pct">%</span>
+        </span>
+      </span>
+      <span class="vs-counter-curtain-label" aria-hidden="true">مشهد گستر • پنل خدمات</span>
+      <i class="vs-counter-curtain-line" aria-hidden="true"></i>
+    </div>
+  </div>
+
+  <!-- کانتینر اصلی -->
+  <div id="app-shell" class="relative z-10 max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-3 sm:pt-5">
+
+    <!-- ========================================================== -->
+    <!-- هدر کپسولی شناور (top-shell)                               -->
+    <!-- ========================================================== -->
+    <header class="top-shell" aria-label="نوار اصلی">
+      <div class="top-brand">
+        <div class="w-8 h-8 rounded-full gold-gradient flex items-center justify-center text-zinc-950 font-black text-xs shadow-sm shrink-0">MG</div>
+        <span>مشهد گستر • خدمات</span>
+      </div>
+
+      <div id="top-nav-slot">
+        <div class="module-nav-wrap">
+          <nav id="dynamic-module-nav" class="module-nav" aria-label="بخش‌های سامانه"></nav>
+        </div>
+      </div>
+
+      <div class="top-actions">
+        <button type="button" id="notif-toggle-btn" title="اعلان‌ها" aria-label="اعلان‌ها" class="w-9 h-9 rounded-full bg-cream-100 dark:bg-zinc-800 text-lg">🔔</button>
+        <span id="header-user-short" class="hidden sm:inline-block text-xs font-extrabold text-zinc-700 dark:text-zinc-200 ml-1"></span>
+        <details id="top-user-menu" class="top-menu">
+          <summary id="top-avatar-ring" title="حساب کاربری" aria-label="حساب کاربری">
+            <img id="top-avatar-img" alt="" class="hidden w-full h-full rounded-full object-cover" />
+            <span id="top-avatar-initial" class="font-black text-xs text-zinc-900 dark:text-white">م</span>
+            <span id="top-status-dot" class="w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-zinc-900 absolute -bottom-0.5 -left-0.5"></span>
+          </summary>
+          <div class="top-menu-content">
+            <button type="button" id="mg-profile-open" class="px-3 py-2 rounded-xl bg-cream-100 dark:bg-zinc-800/80 hover:bg-gold-500/20 text-xs font-extrabold text-right transition">
+              👤 پروفایل
+            </button>
+
+            <button type="button" id="btn-notify-settings" class="px-3 py-2 rounded-xl bg-cream-100 dark:bg-zinc-800/80 hover:bg-gold-500/20 text-xs font-extrabold text-right transition">
+              🔔 تنظیم اعلان‌ها
+            </button>
+
+            <button type="button" id="btn-n8n-sync-now" class="hidden px-3 py-2 rounded-xl bg-zinc-900 text-gold-400 border border-gold-500/40 text-xs font-black flex items-center justify-between hover:bg-zinc-800 transition">
+              <span>پرسنل و دسترسی‌ها</span>
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            </button>
+
+            <button type="button" id="btn-logout-user" class="px-3 py-2 rounded-xl bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/30 text-xs font-black flex items-center justify-between hover:bg-rose-500/25 transition">
+              <span id="current-user-badge">—</span>
+              <span>• خروج</span>
+            </button>
+
+            <button type="button" id="btn-top-excel" class="px-3 py-2 rounded-xl emerald-gradient text-white text-xs font-black shadow-sm transition text-center">
+              📊 خروجی اکسل
+            </button>
+
+            <button id="btn-toggle-theme" type="button" role="switch" aria-checked="false" class="mg-theme-switch">
+              <span>حالت نمایش</span>
+              <span class="mg-theme-track">
+                <span class="mg-theme-knob">
+                  <span class="mg-theme-sun">☀</span>
+                  <span class="mg-theme-moon">☾</span>
+                </span>
+              </span>
+            </button>
+
+            <span id="live-system-clock-badge" class="text-[10px] font-bold text-center text-zinc-500 py-0.5">
+              <span id="live-clock-text">—</span>
+            </span>
+          </div>
+        </details>
+      </div>
+    </header>
+
+    <!-- ========================================================== -->
+    <!-- نوار جستجوی هوشمند سراسری + آمار زنده                       -->
+    <!-- ========================================================== -->
+    <div class="relative z-[120] glass-panel rounded-2xl px-3.5 py-2.5 mb-5 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-2.5 border border-gold-500/35">
+      <div class="relative flex-1">
+        <div class="relative flex items-center">
+          <svg class="w-4 h-4 text-gold-600 dark:text-gold-400 absolute right-3 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          <input id="v5-global-search" type="text" autocomplete="off" placeholder="جستجوی مشتری، شماره تماس، کد گزارش یا قطعه..." class="w-full pr-9 pl-8 py-2 text-xs font-bold" />
+          <button type="button" id="btn-clear-global-search" class="hidden absolute left-2.5 text-zinc-400 hover:text-rose-500 font-black text-sm">×</button>
+        </div>
+        <div id="v5-global-search-dropdown" class="hidden absolute right-0 left-0 top-full mt-1.5 z-[200] rounded-2xl p-2.5 shadow-2xl border border-gold-500 max-h-80 overflow-y-auto space-y-1.5" style="background-color: var(--bg-glass-strong); backdrop-filter: blur(30px);"></div>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2 text-[11px] font-bold text-zinc-600 dark:text-zinc-300 shrink-0">
+        <span id="ticker-pending-count" class="px-2.5 py-1 rounded-lg bg-amber-500/15 text-amber-800 dark:text-amber-300">۰ در انتظار</span>
+        <span id="ticker-approved-count" class="px-2.5 py-1 rounded-lg bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">۰ تاییدشده</span>
+        <span id="ticker-followup-count" class="px-2.5 py-1 rounded-lg bg-indigo-500/15 text-indigo-700 dark:text-indigo-300">۰ پیگیری</span>
+      </div>
+    </div>
+
+    <!-- بنر پیش‌نمایش نقش برای مدیر -->
+    <div id="role-preview-banner" class="hidden mb-4 p-2.5 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-between gap-2 text-xs">
+      <span>👁️ پیش‌نمایش دید: <strong id="preview-role-name-label" class="font-black">—</strong></span>
+      <button type="button" id="btn-exit-role-preview" class="px-3 py-1 rounded-xl bg-zinc-900 text-gold-400 font-black">بازگشت به مدیریت</button>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- ماژول ۱: داشبورد مدیریت (#view-dashboard)                  -->
+    <!-- ========================================================== -->
+    <section id="view-dashboard" class="tab-section hidden space-y-5">
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div data-goto-tab="workspace" class="glass-panel kpi-card-link rounded-3xl p-4 border-2 border-amber-500/30">
+          <span class="text-xs font-bold text-zinc-500">سرویس‌های امروز</span>
+          <h3 id="kpi-today-services" class="text-xl sm:text-2xl font-black mt-1 text-amber-600 dark:text-amber-400">۰ سرویس</h3>
+        </div>
+        <div data-goto-tab="archive" class="glass-panel kpi-card-link rounded-3xl p-4 border-2 border-emerald-500/30">
+          <span class="text-xs font-bold text-zinc-500">قطعات انبار</span>
+          <h3 id="kpi-internal-parts" class="text-lg sm:text-xl font-black mt-1 text-emerald-600 dark:text-emerald-400">۰ تومان</h3>
+        </div>
+        <div data-goto-tab="archive" class="glass-panel kpi-card-link rounded-3xl p-4 border-2 border-indigo-500/30">
+          <span class="text-xs font-bold text-zinc-500">خرید خارج</span>
+          <h3 id="kpi-external-parts" class="text-lg sm:text-xl font-black mt-1 text-indigo-600 dark:text-indigo-400">۰ تومان</h3>
+        </div>
+        <div data-goto-tab="workspace" data-ws-preset="followup" class="glass-panel kpi-card-link rounded-3xl p-4 border-2 border-rose-500/30">
+          <span class="text-xs font-bold text-zinc-500">نیازمند پیگیری</span>
+          <h3 id="kpi-followup-devices" class="text-xl sm:text-2xl font-black mt-1 text-rose-600 dark:text-rose-400">۰ مورد</h3>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        <div class="lg:col-span-7 glass-panel rounded-3xl p-4 sm:p-5 space-y-3">
+          <div class="flex items-center justify-between pb-2.5 border-b border-zinc-200/70 dark:border-zinc-800">
+            <h3 class="text-sm sm:text-base font-black">⏳ گزارش‌های باز در میز کار</h3>
+            <button type="button" data-goto-tab="workspace" class="px-3 py-1.5 rounded-xl gold-gradient text-zinc-950 text-xs font-black">میز کار ⬅</button>
+          </div>
+          <div id="admin-bottlenecks-list" class="space-y-2 max-h-72 overflow-y-auto"></div>
+        </div>
+
+        <div class="lg:col-span-5 glass-panel rounded-3xl p-4 sm:p-5 space-y-3">
+          <div class="flex items-center justify-between pb-2.5 border-b border-zinc-200/70 dark:border-zinc-800">
+            <h3 class="text-sm sm:text-base font-black">📊 عملکرد پرسنل</h3>
+            <button type="button" data-goto-tab="staff" class="px-3 py-1.5 rounded-xl bg-zinc-900 text-gold-400 text-xs font-black">پرسنل</button>
+          </div>
+          <div id="admin-tech-performance-bars" class="space-y-2.5 max-h-72 overflow-y-auto"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================== -->
+    <!-- ماژول ۲: ثبت گزارش کار (#view-service-form)                -->
+    <!-- ========================================================== -->
+    <section id="view-service-form" class="tab-section hidden space-y-4 max-w-4xl mx-auto">
+      <div class="glass-panel rounded-3xl p-4 sm:p-6 border border-gold-500/40 space-y-5">
+        <div class="flex items-center justify-between pb-3 border-b border-zinc-200/70 dark:border-zinc-800">
+          <h2 class="text-base sm:text-lg font-black">📝 ثبت گزارش کار</h2>
+          <div class="flex items-center gap-2">
+            <span id="form-tracking-preview" class="font-mono text-xs font-black px-2.5 py-1 rounded-xl bg-zinc-900 text-gold-400">SRV-104</span>
+            <button type="button" id="btn-reset-service-form" class="px-2.5 py-1 rounded-xl bg-zinc-200 dark:bg-zinc-800 text-xs font-bold">پاک کردن</button>
+          </div>
+        </div>
+
+        <form id="service-report-form" class="space-y-4" novalidate>
+          <input type="hidden" id="sf-edit-report-id" value="" />
+
+          <!-- بخش ۱: مشتری (حدس هوشمند نام + دکمه بایگانی) -->
+          <div class="p-4 rounded-2xl bg-cream-100/80 dark:bg-zinc-900/70 border border-gold-500/25 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-black text-gold-700 dark:text-gold-400">۱. مشخصات مشتری</span>
+              <span id="sf-autofill-badge" class="hidden px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 text-[10px] font-black">مشتری قبلی ✅</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <!-- نام مشتری + پیشنهاد هوشمند + دکمه بایگانی -->
+              <div class="relative">
+                <label class="block text-xs font-extrabold mb-1">نام مشتری <span class="text-rose-500">*</span></label>
+                <div class="flex items-center gap-1.5">
+                  <input id="sf-customer-name" type="text" autocomplete="off" required placeholder="نام مشتری را بنویسید..." class="flex-1 min-w-0 px-3 py-2.5 rounded-xl bg-white dark:bg-zinc-950 border border-zinc-300/80 dark:border-zinc-700 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-gold-500" />
+                  <button type="button" id="btn-open-cust-archive-quick" title="سوابق قبلی مشتری" class="px-3 py-2.5 rounded-xl bg-zinc-900 text-gold-400 text-xs font-black shrink-0 shadow-sm hover:bg-zinc-800 transition">
+                    📂 بایگانی
+                  </button>
+                </div>
+                <div id="sf-customer-suggestions" class="hidden absolute right-0 left-0 top-full mt-1 z-[150] rounded-2xl p-1.5 shadow-2xl border border-gold-500 max-h-48 overflow-y-auto space-y-1" style="background-color: var(--bg-glass-strong); backdrop-filter: blur(24px);"></div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-extrabold mb-1">شماره تماس <span class="text-rose-500">*</span></label>
+                <input id="sf-phone" type="tel" dir="ltr" required placeholder="0915..." class="w-full px-3 py-2.5 rounded-xl bg-white dark:bg-zinc-950 border border-zinc-300/80 dark:border-zinc-700 text-xs font-black text-right focus:outline-none focus:ring-2 focus:ring-gold-500" />
+              </div>
+
+              <div class="sm:col-span-2">
+                <label class="block text-xs font-extrabold mb-1">نشانی محل <span class="text-rose-500">*</span></label>
+                <input id="sf-address" type="text" required placeholder="خیابان، کوچه، پلاک..." class="w-full px-3 py-2.5 rounded-xl bg-white dark:bg-zinc-950 border border-zinc-300/80 dark:border-zinc-700 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-gold-500" />
+              </div>
+
+              <div class="sm:col-span-2">
+                <label class="block text-xs font-extrabold mb-1">وضعیت مشتری</label>
+                <input type="hidden" id="sf-rating-value" value="normal" />
+                <div class="grid grid-cols-3 gap-2" id="sf-rating-pills">
+                  <button type="button" data-rating="vip" class="rating-pill-btn py-2 px-2 rounded-xl border text-[11px] font-black bg-white/70 dark:bg-zinc-900 border-zinc-300/80 dark:border-zinc-700">🟢 VIP</button>
+                  <button type="button" data-rating="normal" class="rating-pill-btn py-2 px-2 rounded-xl border-2 text-[11px] font-black bg-amber-500/20 border-amber-500 text-amber-800 dark:text-amber-200">🟡 عادی</button>
+                  <button type="button" data-rating="risk" class="rating-pill-btn py-2 px-2 rounded-xl border text-[11px] font-black bg-white/70 dark:bg-zinc-900 border-zinc-300/80 dark:border-zinc-700">🔴 دقت</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- بخش ۲: شرح عیب و تشخیص فنی -->
+          <div class="p-4 rounded-2xl bg-cream-100/80 dark:bg-zinc-900/70 border border-gold-500/25 space-y-3">
+            <span class="text-xs font-black text-gold-700 dark:text-gold-400 block">۲. شرح عیب و تشخیص فنی</span>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-extrabold mb-1">اعلام مشتری <span class="text-rose-500">*</span></label>
+                <textarea id="sf-customer-fault" rows="2" required placeholder="مشکل اعلامی مشتری..." class="w-full px-3 py-2 rounded-xl bg-white dark:bg-zinc-950 border border-zinc-300/80 dark:border-zinc-700 text-xs font-bold"></textarea>
+              </div>
+              <div>
+                <label class="block text-xs font-extrabold mb-1">تشخیص و اقدام فنی <span class="text-rose-500">*</span></label>
+                <textarea id="sf-tech-diagnosis" rows="2" required placeholder="عیب‌یابی و تعمیر انجام‌شده..." class="w-full px-3 py-2 rounded-xl bg-white dark:bg-zinc-950 border border-zinc-300/80 dark:border-zinc-700 text-xs font-bold"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- بخش ۳: قطعات و لوازم مصرفی (تومان با جداسازی سه‌رقمی روان) -->
+          <div class="p-4 rounded-2xl bg-cream-100/80 dark:bg-zinc-900/70 border border-gold-500/25 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-black text-gold-700 dark:text-gold-400">۳. قطعات و لوازم مصرفی (تومان)</span>
+            </div>
+
+            <div id="sf-parts-list" class="space-y-2.5"></div>
+
+            <button type="button" id="btn-add-part-row" class="w-full py-2.5 rounded-xl gold-gradient text-zinc-950 text-xs font-black">+ افزودن قطعه</button>
+
+            <div class="grid grid-cols-3 gap-2 pt-1 text-center text-xs">
+              <div class="p-2 rounded-xl bg-white/85 dark:bg-zinc-950/60 border border-gold-500/20">
+                <span class="text-[10px] text-zinc-500 block">انبار مجموعه</span>
+                <strong id="sf-sum-internal" class="font-black">۰ تومان</strong>
+              </div>
+              <div class="p-2 rounded-xl bg-indigo-500/10 border border-indigo-500/25">
+                <span class="text-[10px] text-indigo-600 dark:text-indigo-300 block">خرید خارج</span>
+                <strong id="sf-sum-external" class="font-black text-indigo-700 dark:text-indigo-300">۰ تومان</strong>
+              </div>
+              <div class="p-2 rounded-xl bg-emerald-500/15 border border-emerald-500/30">
+                <span class="text-[10px] text-emerald-700 dark:text-emerald-300 block">جمع کل</span>
+                <strong id="sf-sum-total" class="font-black text-emerald-700 dark:text-emerald-300">۰ تومان</strong>
+              </div>
+            </div>
+
+            <div id="sf-labor-section" class="pt-3 border-t border-gold-500/25 space-y-2.5">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-black text-gold-700 dark:text-gold-400">دستمزد خدمات</span>
+              </div>
+              <div id="sf-labor-rows" class="space-y-2"></div>
+              <button type="button" id="btn-add-labor-row" class="w-full py-2.5 rounded-xl gold-gradient text-zinc-950 text-xs font-black">+ افزودن ردیف دستمزد</button>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 items-end">
+                <label class="text-xs font-bold">تخفیف (تومان)
+                  <input id="sf-discount" type="number" min="0" step="1" placeholder="تخفیف" class="w-full mt-1 px-3 py-2 rounded-xl bg-white dark:bg-zinc-950 border border-zinc-300/80 dark:border-zinc-700 text-xs font-bold" />
+                </label>
+                <div class="p-2 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-center text-xs font-black">
+                  مبلغ قابل پرداخت: <span id="sf-grand-payable">۰</span> تومان
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- بخش ۴: وضعیت نهایی دستگاه -->
+          <div class="p-4 rounded-2xl bg-cream-100/80 dark:bg-zinc-900/70 border border-gold-500/25 space-y-3">
+            <span class="text-xs font-black text-gold-700 dark:text-gold-400 block">۴. وضعیت دستگاه و توضیحات</span>
+            <input type="hidden" id="sf-device-status-val" value="tested" />
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5" id="sf-device-status-cards">
+              <button type="button" data-dev-status="tested" class="dev-status-btn p-3 rounded-2xl border-2 border-emerald-500 bg-emerald-500/15 text-right flex items-center gap-2">
+                <span class="text-lg">✅</span>
+                <strong class="text-xs font-black">تحویل و تست نهایی شد</strong>
+              </button>
+              <button type="button" data-dev-status="followup" class="dev-status-btn p-3 rounded-2xl border border-zinc-300/80 dark:border-zinc-700 bg-white/70 dark:bg-zinc-900 text-right flex items-center gap-2">
+                <span class="text-lg">⏳</span>
+                <strong class="text-xs font-black">نیازمند پیگیری بعدی</strong>
+              </button>
+            </div>
+
+            <div id="sf-followup-date-box" class="hidden">
+              <label class="block text-xs font-extrabold mb-1">تاریخ پیگیری بعدی</label>
+              <input id="sf-followup-date" type="text" placeholder="1405/09/10" class="w-full px-3 py-2 rounded-xl bg-white dark:bg-zinc-950 border border-amber-500/50 text-xs font-bold" />
+            </div>
+
+            <div>
+              <div class="flex flex-wrap gap-1 mb-1.5" id="sf-quick-tech-chips">
+                <button type="button" data-chip="نشتی گاز و آب چک شد" class="px-2 py-0.5 rounded-lg bg-cream-200 dark:bg-zinc-800 text-[10px] font-bold">+ نشتی چک شد</button>
+                <button type="button" data-chip="نصب محافظ برق توصیه شد" class="px-2 py-0.5 rounded-lg bg-cream-200 dark:bg-zinc-800 text-[10px] font-bold">+ توصیه محافظ برق</button>
+                <button type="button" data-chip="سرویس دوره‌ای و رسوب‌زدایی انجام شد" class="px-2 py-0.5 rounded-lg bg-cream-200 dark:bg-zinc-800 text-[10px] font-bold">+ رسوب‌زدایی</button>
+              </div>
+              <textarea id="sf-tech-notes" rows="2" placeholder="توضیحات تکمیلی..." class="w-full px-3 py-2 rounded-xl bg-white dark:bg-zinc-950 border border-zinc-300/80 dark:border-zinc-700 text-xs font-bold"></textarea>
+            </div>
+          </div>
+
+          <button type="submit" class="w-full py-3.5 rounded-2xl emerald-gradient text-white font-black text-xs sm:text-sm shadow-lg">
+            بازبینی و ارسال به میز کار ⬅
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ========================================================== -->
+    <!-- ماژول ۳: میز کار دو تبه (#view-workspace - خلوت و بدون بنر) -->
+    <!-- ========================================================== -->
+    <section id="view-workspace" class="tab-section hidden space-y-4">
+      <div class="glass-panel rounded-2xl p-2.5 flex flex-wrap items-center justify-between gap-2">
+        <div class="inline-flex bg-cream-200/80 dark:bg-zinc-900 p-1 rounded-xl border border-gold-500/25 gap-1">
+          <button type="button" data-ws-pane="reports" class="ws-pane-btn py-2 px-4 rounded-lg text-xs font-black gold-gradient text-zinc-950 shadow-sm">
+            📋 گزارش‌های کار (<span id="ws-reports-badge">۰</span>)
+          </button>
+          <button type="button" data-ws-pane="checklists" class="ws-pane-btn py-2 px-4 rounded-lg text-xs font-bold text-zinc-600 dark:text-zinc-300">
+            ☑️ چک‌لیست‌ها (<span id="ws-checklists-badge">۰</span>)
+          </button>
+        </div>
+
+        <div class="flex items-center gap-1.5">
+          <button type="button" id="btn-ws-toggle-filters" class="px-3 py-2 rounded-xl bg-cream-100 dark:bg-zinc-900 border border-gold-500/35 text-xs font-black">
+            ☷ فیلترها
+          </button>
+          <button type="button" id="btn-ws-new-checklist" class="hidden px-3 py-2 rounded-xl gold-gradient text-zinc-950 text-xs font-black">
+            + چک‌لیست جدید
+          </button>
+        </div>
+      </div>
+
+      <!-- تب ۱ میز کار: گزارش‌های کار و ارجاع‌ها -->
+      <div id="ws-pane-reports" class="space-y-3">
+        <div class="flex items-center gap-1.5 overflow-x-auto pb-1" id="ws-status-tabs">
+          <button type="button" id="ws-mine-btn" class="ws-mine-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-black border-2 border-gold-500/50 bg-cream-100 dark:bg-zinc-900">👤 میز کار من (<span id="ws-cnt-mine">۰</span>)</button>
+          <button type="button" data-ws-status="all" class="ws-tab-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-black gold-gradient text-zinc-950">همه (<span id="ws-cnt-all">۰</span>)</button>
+          <button type="button" data-ws-status="pending" class="ws-tab-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-500/15 text-amber-800 dark:text-amber-300">🟡 در انتظار (<span id="ws-cnt-pending">۰</span>)</button>
+          <button type="button" data-ws-status="assigned" class="ws-tab-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-indigo-500/15 text-indigo-800 dark:text-indigo-300">🔵 ارجاع‌شده (<span id="ws-cnt-assigned">۰</span>)</button>
+          <button type="button" data-ws-status="approved" class="ws-tab-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-500/15 text-emerald-800 dark:text-emerald-300">🟢 تاییدشده (<span id="ws-cnt-approved">۰</span>)</button>
+          <button type="button" data-ws-status="rejected" class="ws-tab-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-rose-500/15 text-rose-800 dark:text-rose-300">🔴 برگشتی (<span id="ws-cnt-rejected">۰</span>)</button>
+        </div>
+
+        <!-- کشوی فیلترها -->
+        <div id="ws-filters-drawer" class="hidden glass-panel rounded-2xl p-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2 text-xs">
+          <input id="ws-filter-search" type="text" placeholder="نام مشتری، کد یا شماره..." class="px-3 py-2 rounded-xl bg-cream-100 dark:bg-zinc-900 border border-gold-500/30 font-bold" />
+          <select id="ws-filter-staff" class="px-3 py-2 rounded-xl bg-cream-100 dark:bg-zinc-900 border border-gold-500/30 font-bold">
+            <option value="all">همه پرسنل</option>
+          </select>
+          <select id="ws-filter-rating" class="px-3 py-2 rounded-xl bg-cream-100 dark:bg-zinc-900 border border-gold-500/30 font-bold">
+            <option value="all">همه مشتریان</option>
+            <option value="vip">🟢 VIP</option>
+            <option value="normal">🟡 عادی</option>
+            <option value="risk">🔴 دقت</option>
+          </select>
+          <select id="ws-filter-date" class="px-3 py-2 rounded-xl bg-cream-100 dark:bg-zinc-900 border border-gold-500/30 font-bold">
+            <option value="all">همه تاریخ‌ها</option>
+            <option value="today">امروز</option>
+            <option value="week">۷ روز اخیر</option>
+          </select>
+          <div class="flex items-center justify-between gap-2 px-2">
+            <label class="inline-flex items-center gap-1.5 font-bold cursor-pointer">
+              <input type="checkbox" id="ws-filter-followup-only" class="accent-gold-500 w-4 h-4" />
+              <span>فقط پیگیری</span>
+            </label>
+            <button type="button" id="btn-ws-reset-filters" class="text-rose-600 font-black">پاک کردن</button>
+          </div>
+        </div>
+
+        <div id="workspace-checklist-container" class="space-y-2.5"></div>
+      </div>
+
+      <!-- تب ۲ میز کار: چک‌لیست‌های شخصی و همکاران -->
+      <div id="ws-pane-checklists" class="hidden space-y-4">
+        <form id="ws-checklist-form" class="glass-panel rounded-3xl p-4 space-y-3 text-xs border border-gold-500/35">
+          <input type="hidden" id="cl-edit-id" value="" />
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div>
+              <label class="block font-extrabold mb-1">عنوان چک‌لیست</label>
+              <input id="cl-title" type="text" required placeholder="مثال: پیگیری قطعات و فاکتورها..." class="w-full px-3 py-2 rounded-xl bg-cream-100 dark:bg-zinc-900 border border-gold-500/30 font-bold" />
+            </div>
+            <div>
+              <label class="block font-extrabold mb-1">برای چه کسی؟</label>
+              <select id="cl-assignee" class="w-full px-3 py-2 rounded-xl bg-cream-100 dark:bg-zinc-900 border border-gold-500/30 font-bold"></select>
+            </div>
+          </div>
+          <div>
+            <label class="block font-extrabold mb-1">آیتم‌های چک‌لیست (هر خط یک مورد)</label>
+            <textarea id="cl-items-text" rows="2" required placeholder="بررسی موجودی سنسور&#10;تماس با مشتری..." class="w-full px-3 py-2 rounded-xl bg-cream-100 dark:bg-zinc-900 border border-gold-500/30 font-bold"></textarea>
+          </div>
+          <div class="flex items-center gap-2">
+            <button type="submit" id="btn-cl-submit" class="px-4 py-2 rounded-xl emerald-gradient text-white font-black">+ ثبت و ارسال چک‌لیست</button>
+            <button type="button" id="btn-cl-cancel-edit" class="hidden px-3 py-2 rounded-xl bg-zinc-200 dark:bg-zinc-800 font-bold">انصراف</button>
+          </div>
+        </form>
+
+        <div id="ws-checklists-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3.5"></div>
+      </div>
+    </section>
+
+    <!-- ========================================================== -->
+    <!-- ماژول ۴: بایگانی (#view-archive - کارت‌های زیبا و بازشونده) -->
+    <!-- ========================================================== -->
+    <section id="view-archive" class="tab-section hidden space-y-4">
+      <div class="glass-panel rounded-2xl p-3 flex flex-wrap items-center justify-between gap-2 text-xs">
+        <div class="flex flex-1 min-w-[200px] items-center gap-2">
+          <input id="arch-search-input" type="text" placeholder="جستجو در بایگانی (نام مشتری، شماره، کد یا قطعه)..." class="flex-1 px-3 py-2 rounded-xl bg-cream-100 dark:bg-zinc-900 border border-gold-500/30 font-bold" />
+          <select id="arch-status-filter" class="px-3 py-2 rounded-xl bg-cream-100 dark:bg-zinc-900 border border-gold-500/30 font-bold">
+            <option value="all">همه</option>
+            <option value="approved">🟢 تاییدشده</option>
+            <option value="pending">🟡 در انتظار</option>
+            <option value="assigned">🔵 ارجاع‌شده</option>
+            <option value="rejected">🔴 برگشتی</option>
+          </select>
+        </div>
+        <button type="button" id="btn-archive-export-csv" class="px-3.5 py-2 rounded-xl emerald-gradient text-white font-black shrink-0">
+          📊 خروجی اکسل
+        </button>
+      </div>
+
+      <div id="archive-cards-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3.5"></div>
+    </section>
+
+    <!-- ========================================================== -->
+    <!-- ماژول ۵: پرسنل (#view-staff)                               -->
+    <!-- ========================================================== -->
+    <section id="view-staff" class="tab-section hidden space-y-4">
+      <div class="glass-panel rounded-2xl p-3 flex flex-wrap items-center justify-between gap-2 text-xs">
+        <div class="flex items-center gap-1.5 overflow-x-auto pb-1" id="staff-role-filters">
+          <button type="button" data-staff-role="all" class="staff-role-btn shrink-0 px-3 py-1.5 rounded-xl font-black gold-gradient text-zinc-950">همه (<span id="st-cnt-all">۰</span>)</button>
+          <button type="button" data-staff-role="admin" class="staff-role-btn shrink-0 px-3 py-1.5 rounded-xl font-bold bg-amber-500/15">👑 مدیریت (<span id="st-cnt-admin">۰</span>)</button>
+          <button type="button" data-staff-role="supervisor" class="staff-role-btn shrink-0 px-3 py-1.5 rounded-xl font-bold bg-orange-500/15">📋 سرپرست (<span id="st-cnt-supervisor">۰</span>)</button>
+          <button type="button" data-staff-role="pro" class="staff-role-btn shrink-0 px-3 py-1.5 rounded-xl font-bold bg-purple-500/15">⚡ پرفکت (<span id="st-cnt-pro">۰</span>)</button>
+          <button type="button" data-staff-role="amateur" class="staff-role-btn shrink-0 px-3 py-1.5 rounded-xl font-bold bg-sky-500/15">🔧 آماتور (<span id="st-cnt-amateur">۰</span>)</button>
+          <button type="button" data-staff-role="apprentice" class="staff-role-btn shrink-0 px-3 py-1.5 rounded-xl font-bold bg-zinc-500/15">🌱 شاگرد (<span id="st-cnt-apprentice">۰</span>)</button>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <input id="staff-search-input" type="text" placeholder="نام یا نام کاربری..." class="w-40 sm:w-48 px-3 py-2 rounded-xl bg-cream-100 dark:bg-zinc-900 border border-gold-500/30 font-bold" />
+          <button type="button" id="btn-open-new-staff" class="px-3.5 py-2 rounded-xl gold-gradient text-zinc-950 font-black shrink-0">+ پرسنل جدید</button>
+        </div>
+      </div>
+
+      <div id="staff-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5"></div>
+    </section>
+
+  </div>
+
+  <!-- ========================================================== -->
+  <!-- MODAL 1: درگاه ورود دوگانه فروش / خدمات (#auth-login-modal) -->
+  <!-- ========================================================== -->
+  <div id="auth-login-modal" class="fixed inset-0 z-[220] bg-zinc-950/90 backdrop-blur-xl flex items-center justify-center p-4 overflow-y-auto">
+    <div class="modal-spring glass-strong rounded-3xl max-w-md w-full p-6 border-2 border-gold-500/55 shadow-2xl space-y-4 my-auto">
+      <div class="text-center space-y-1.5">
+        <div class="w-14 h-14 mx-auto rounded-2xl gold-gradient flex items-center justify-center text-zinc-950 font-black text-xl shadow-lg">MG</div>
+        <h2 class="text-lg font-black">سامانه مشهد گستر</h2>
+      </div>
+
+      <div class="grid grid-cols-2 gap-1.5 p-1 rounded-2xl bg-cream-200 dark:bg-zinc-900 border border-gold-500/30">
+        <button type="button" id="btn-portal-sales" class="py-2 px-3 rounded-xl text-xs font-bold text-zinc-600 dark:text-zinc-300">بخش فروش</button>
+        <button type="button" id="btn-portal-service" class="py-2 px-3 rounded-xl text-xs font-black gold-gradient text-zinc-950 shadow-sm">بخش خدمات</button>
+      </div>
+
+      <div id="portal-sales-notice" class="hidden p-4 rounded-2xl bg-cream-100 dark:bg-zinc-900 border border-gold-500/35 text-center space-y-3 text-xs">
+        <strong class="block text-sm font-black">ورود به رادار فروش (CRM)</strong>
+        <button type="button" id="btn-switch-back-service" class="w-full py-2.5 rounded-xl gold-gradient text-zinc-950 font-black">ورود به بخش خدمات ⬅</button>
+      </div>
+
+      <div id="portal-service-form-wrap" class="space-y-3">
+        <form id="auth-login-form" class="space-y-3 text-xs" novalidate>
+          <div>
+            <label class="block font-extrabold mb-1">نام کاربری</label>
+            <input id="login-username" type="text" dir="ltr" required value="erfan" class="w-full px-3.5 py-2.5 rounded-xl bg-cream-100 dark:bg-zinc-900 border border-gold-500/40 font-black text-left" />
+          </div>
+          <div>
+            <label class="block font-extrabold mb-1">رمز عبور</label>
+            <input id="login-password" type="password" dir="ltr" required value="1234" class="w-full px-3.5 py-2.5 rounded-xl bg-cream-100 dark:bg-zinc-900 border border-gold-500/40 font-black text-left" />
+          </div>
+          <div id="login-error-box" class="hidden p-2.5 rounded-xl bg-rose-500/15 text-rose-600 text-xs font-bold text-center"></div>
+          <button type="submit" class="w-full py-3 rounded-2xl gold-gradient text-zinc-950 font-black text-sm shadow-lg">ورود به پنل خدمات</button>
+        </form>
+
+        <div class="pt-2.5 border-t border-zinc-200/70 dark:border-zinc-800 space-y-1.5 text-[11px]">
+          <span class="block text-center text-zinc-400 font-bold">ورود سریع تست نقش‌ها:</span>
+          <div class="grid grid-cols-2 gap-1.5">
+            <button type="button" data-quick-login="erfan" class="py-1.5 px-2 rounded-xl bg-zinc-900 text-gold-400 font-black">👑 مدیریت (erfan)</button>
+            <button type="button" data-quick-login="supervisor" class="py-1.5 px-2 rounded-xl bg-orange-500/15 text-orange-700 dark:text-orange-300 font-black">📋 سرپرست</button>
+            <button type="button" data-quick-login="pro" class="py-1.5 px-2 rounded-xl bg-purple-500/15 text-purple-700 dark:text-purple-300 font-black">⚡ پرفکت</button>
+            <button type="button" data-quick-login="amateur" class="py-1.5 px-2 rounded-xl bg-sky-500/15 text-sky-700 dark:text-sky-300 font-black">🔧 آماتور</button>
+          </div>
+          <button type="button" data-quick-login="apprentice" class="w-full py-1.5 px-2 rounded-xl bg-zinc-500/15 font-black">🌱 شاگرد</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================== -->
+  <!-- MODAL 2: تایید نهایی ارسال گزارش (#report-review-modal)     -->
+  <!-- ========================================================== -->
+  <div id="report-review-modal" class="app-modal fixed inset-0 z-[160] bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4 overflow-y-auto">
+    <div class="modal-spring glass-strong rounded-3xl max-w-lg w-full p-5 border-2 border-gold-500/50 space-y-4 my-auto">
+      <div class="flex items-center justify-between pb-2.5 border-b border-zinc-200/70 dark:border-zinc-800">
+        <h3 class="text-base font-black">تایید و ارسال گزارش</h3>
+        <button type="button" data-close-modal="report-review-modal" class="px-2.5 py-1 rounded-xl bg-zinc-200 dark:bg-zinc-800 text-xs font-bold">ویرایش</button>
+      </div>
+      <div id="review-modal-content" class="space-y-2.5 text-xs max-h-[60vh] overflow-y-auto"></div>
+      <div class="flex gap-2 pt-2">
+        <button type="button" data-close-modal="report-review-modal" class="px-4 py-2.5 rounded-xl bg-zinc-200 dark:bg-zinc-800 text-xs font-bold">بازگشت</button>
+        <button type="button" id="btn-confirm-send-report" class="flex-1 py-2.5 rounded-xl emerald-gradient text-white text-xs font-black shadow-lg">✅ ثبت نهایی در میز کار</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================== -->
+  <!-- MODAL 3: پرونده کامل گزارش (#case-detail-modal)             -->
+  <!-- ========================================================== -->
+  <div id="case-detail-modal" class="app-modal fixed inset-0 z-[160] bg-black/75 backdrop-blur-md hidden items-center justify-center p-3 sm:p-4 overflow-y-auto">
+    <div class="modal-spring glass-strong rounded-3xl max-w-3xl w-full p-5 border-2 border-gold-500/50 space-y-4 my-auto">
+      <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-zinc-200/70 dark:border-zinc-800">
+        <div class="flex items-center gap-2">
+          <span id="cd-code-badge" class="font-mono text-xs font-black px-2.5 py-1 rounded-xl bg-zinc-900 text-gold-400">SRV-101</span>
+          <h3 id="cd-customer-title" class="text-base font-black">—</h3>
+          <span id="cd-status-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-black">—</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <button type="button" id="btn-cd-edit-record" class="hidden px-2.5 py-1.5 rounded-xl bg-blue-500/15 text-blue-600 dark:text-blue-400 text-xs font-black">✏️ ویرایش</button>
+          <button type="button" id="btn-cd-delete-record" class="hidden px-2.5 py-1.5 rounded-xl bg-rose-500/15 text-rose-600 text-xs font-black">🗑️ حذف</button>
+          <button type="button" data-close-modal="case-detail-modal" class="px-2.5 py-1.5 rounded-xl bg-zinc-200 dark:bg-zinc-800 text-xs font-bold">بستن</button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-1.5 bg-cream-200/80 dark:bg-zinc-900 p-1 rounded-2xl border border-gold-500/25">
+        <button type="button" data-cd-tab="details" class="cd-inner-tab py-2 rounded-xl text-xs font-black gold-gradient text-zinc-950">جزئیات و قطعات</button>
+        <button type="button" data-cd-tab="timeline" class="cd-inner-tab py-2 rounded-xl text-xs font-bold text-zinc-600 dark:text-zinc-300">تاریخچه اتفاقات</button>
+      </div>
+
+      <div id="cd-panel-details" class="space-y-3 max-h-[55vh] overflow-y-auto text-xs"></div>
+      <div id="cd-panel-timeline" class="hidden space-y-2 max-h-[55vh] overflow-y-auto text-xs"></div>
+
+      <!-- دکمه‌های سرپرست و مدیریت -->
+      <div id="cd-supervisor-actions" class="hidden pt-3 border-t border-zinc-200/70 dark:border-zinc-800 space-y-2.5 text-xs">
+        <div id="cd-delegate-box" class="hidden p-3 rounded-2xl bg-indigo-500/10 border border-indigo-500/35 space-y-2">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <select id="cd-delegate-user" class="px-3 py-2 rounded-xl bg-white dark:bg-zinc-900 border border-indigo-500/30 font-bold"></select>
+            <input id="cd-delegate-note" type="text" placeholder="یادداشت ارجاع..." class="px-3 py-2 rounded-xl bg-white dark:bg-zinc-900 border border-indigo-500/30 font-bold" />
+          </div>
+          <button type="button" id="btn-cd-confirm-delegate" class="w-full py-2 rounded-xl bg-indigo-600 text-white font-black">ثبت ارجاع</button>
+        </div>
+
+        <div id="cd-reject-box" class="hidden p-3 rounded-2xl bg-rose-500/10 border border-rose-500/35 space-y-2">
+          <input id="cd-reject-reason" type="text" placeholder="دلیل برگشت برای اصلاح..." class="w-full px-3 py-2 rounded-xl bg-white dark:bg-zinc-900 border border-rose-500/30 font-bold" />
+          <button type="button" id="btn-cd-confirm-reject" class="w-full py-2 rounded-xl bg-rose-600 text-white font-black">برگشت گزارش</button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+          <button type="button" id="btn-cd-approve" class="py-2.5 px-3 rounded-xl emerald-gradient text-white font-black">✅ تایید نهایی</button>
+          <button type="button" id="btn-cd-toggle-delegate" class="py-2.5 px-3 rounded-xl bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-black">🔵 ارجاع به همکار</button>
+          <button type="button" id="btn-cd-toggle-reject" class="py-2.5 px-3 rounded-xl bg-rose-500/15 text-rose-600 font-black">🔴 عدم تایید</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================== -->
+  <!-- MODAL 4: سوابق مشتری از داخل فرم گزارش (#customer-history-modal) -->
+  <!-- ========================================================== -->
+  <div id="customer-history-modal" class="app-modal fixed inset-0 z-[165] bg-black/75 backdrop-blur-sm hidden items-center justify-center p-4 overflow-y-auto">
+    <div class="modal-spring glass-strong rounded-3xl max-w-xl w-full p-5 border-2 border-gold-500/50 space-y-3 my-auto">
+      <div class="flex items-center justify-between pb-2 border-b border-zinc-200/70 dark:border-zinc-800">
+        <h3 id="chm-title" class="text-sm sm:text-base font-black">📂 سوابق مشتری</h3>
+        <button type="button" data-close-modal="customer-history-modal" class="px-2.5 py-1 rounded-xl bg-zinc-200 dark:bg-zinc-800 text-xs font-bold">بستن</button>
+      </div>
+      <div id="chm-list" class="space-y-2.5 max-h-[60vh] overflow-y-auto text-xs"></div>
+    </div>
+  </div>
+
+  <!-- ========================================================== -->
+  <!-- MODAL 5: ویرایش پرسنل و مجوزهای تیک‌خور (#staff-edit-modal)  -->
+  <!-- ========================================================== -->
+  <div id="staff-edit-modal" class="app-modal fixed inset-0 z-[165] bg-black/75 backdrop-blur-sm hidden items-center justify-center p-4 overflow-y-auto">
+    <div class="modal-spring glass-strong rounded-3xl max-w-lg w-full p-5 border-2 border-gold-500/50 space-y-4 my-auto">
+      <div class="flex items-center justify-between pb-2.5 border-b border-zinc-200/70 dark:border-zinc-800">
+        <h3 id="sem-modal-title" class="text-base font-black">پروفایل و دسترسی‌های پرسنل</h3>
+        <button type="button" data-close-modal="staff-edit-modal" class="px-2.5 py-1 rounded-xl bg-zinc-200 dark:bg-zinc-800 text-xs font-bold">بستن</button>
+      </div>
+
+      <form id="staff-manage-form" class="space-y-3 text-xs" novalidate>
+        <input type="hidden" id="sem-id" value="" />
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <div>
+            <label class="block font-extrabold mb-1">نام و نام خانوادگی</label>
+            <input id="sem-name" type="text" required class="w-full px-3 py-2 rounded-xl bg-cream-100 dark:bg-zinc-900 border border-gold-500/35 font-bold" />
+          </div>
+          <div>
+            <label class="block font-extrabold mb-1">شماره تماس</label>
+            <input id="sem-phone" type="tel" dir="ltr" class="w-full px-3 py-2 rounded-xl bg-cream-100 dark:bg-zinc-900 border border-gold-500/35 font-bold text-right" />
+          </div>
+          <div>
+            <label class="block font-extrabold mb-1">نام کاربری</label>
+            <input id="sem-username" type="text" dir="ltr" required class="w-full px-3 py-2 rounded-xl bg-cream-100 dark:bg-zinc-900 border border-gold-500/35 font-black text-left" />
+          </div>
+          <div>
+            <label class="block font-extrabold mb-1">رمز عبور</label>
+            <div class="flex gap-1">
+              <input id="sem-password" type="text" dir="ltr" required class="flex-1 px-3 py-2 rounded-xl bg-cream-100 dark:bg-zinc-900 border border-gold-500/35 font-black text-left" />
+              <button type="button" id="btn-gen-pass" class="px-2.5 rounded-xl bg-zinc-900 text-gold-400 font-black">🎲</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 items-center">
+          <div>
+            <label class="block font-extrabold mb-1">رده شغلی (رنگ پروفایل)</label>
+            <select id="sem-role" class="w-full px-3 py-2 rounded-xl bg-cream-100 dark:bg-zinc-900 border border-gold-500/35 font-black">
+              <option value="apprentice">🌱 شاگرد (طوسی)</option>
+              <option value="amateur">🔧 آماتور (آبی)</option>
+              <option value="pro">⚡ پرفکت / حرفه‌ای (بنفش)</option>
+              <option value="supervisor">📋 سرپرست (نارنجی)</option>
+              <option value="admin">👑 مدیریت (طلایی)</option>
+            </select>
+          </div>
+          <label class="flex items-center gap-2 pt-4 font-black cursor-pointer">
+            <input type="checkbox" id="sem-active" checked class="w-4 h-4 accent-emerald-600" />
+            <span>حساب کاربری فعال باشد</span>
+          </label>
+        </div>
+
+        <!-- چک‌باکس‌های مجوزهای قابل تغییر دستی -->
+        <div class="p-3 rounded-2xl bg-cream-100 dark:bg-zinc-900 border border-gold-500/30 space-y-2">
+          <strong class="block text-gold-700 dark:text-gold-400">سطوح دسترسی (قابل تغییر با تیک):</strong>
+          <div id="sem-permissions-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-1.5"></div>
+        </div>
+
+        <button type="submit" class="w-full py-3 rounded-xl emerald-gradient text-white font-black shadow-lg">💾 ذخیره اطلاعات و مجوزها</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================== -->
+  <!-- MODAL 6: پروفایل من (#mg-profile-overlay)                  -->
+  <!-- ========================================================== -->
+  <div id="mg-profile-overlay" class="app-modal fixed inset-0 z-[170] bg-black/75 backdrop-blur-sm hidden items-center justify-center p-4 overflow-y-auto">
+    <section class="modal-spring glass-strong rounded-3xl max-w-lg w-full p-5 sm:p-6 border-2 border-gold-500/50 space-y-4 my-auto text-right" role="dialog" aria-modal="true" aria-labelledby="mg-profile-title">
+      <div class="flex items-center justify-between pb-2.5 border-b border-zinc-200/70 dark:border-zinc-800">
+        <h2 id="mg-profile-title" class="text-base font-black">پروفایل من</h2>
+        <button type="button" id="mg-profile-close" data-close-modal="mg-profile-overlay" aria-label="بستن" class="px-2.5 py-1 rounded-xl bg-zinc-200 dark:bg-zinc-800 text-xs font-bold">✕</button>
+      </div>
+
+      <!-- هدر پروفایل: آواتار با حلقه رنگی محرمانه + تغییر عکس + نام و نقش (فقط برای مدیر) -->
+      <div class="mg-profile-hero">
+        <div id="mp-avatar-circle" class="mg-profile-avatar avatar-glow">
+          <img id="mg-profile-image" alt="عکس پروفایل" class="hidden" />
+          <span id="mg-profile-initial">م</span>
+        </div>
+        <div class="flex-1 min-w-0 space-y-1">
+          <strong id="mp-name" class="text-base font-black block truncate">—</strong>
+          <div id="mp-admin-only-role" class="hidden">
+            <span id="mp-role-pill" class="mg-profile-role text-gold-800 dark:text-gold-300">مدیر</span>
+          </div>
+          <div class="flex flex-wrap items-center gap-3 pt-0.5">
+            <label for="mg-profile-photo" class="cursor-pointer text-xs font-extrabold text-gold-700 dark:text-gold-400 hover:underline">
+              تغییر عکس
+            </label>
+            <button type="button" id="btn-remove-profile-photo" class="hidden text-[11px] font-bold text-rose-600 hover:underline">حذف عکس</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- فرم مشخصات پروفایل (نام کاربری ورود، وضعیت، بیو، داخلی یا شماره تماس) -->
+      <form id="mg-profile-info" class="mg-profile-section space-y-3 text-xs" novalidate>
+        <input id="mg-profile-photo" type="file" accept="image/*" class="hidden" />
+
+        <div class="mg-profile-grid">
+          <div>
+            <label for="mp-username-input" class="block font-extrabold mb-1">نام کاربری ورود</label>
+            <input id="mp-username-input" name="loginName" type="text" dir="ltr" readonly class="w-full px-3 py-2.5 rounded-xl bg-cream-200/70 dark:bg-zinc-900/90 border border-gold-500/35 font-mono font-black text-left opacity-85 cursor-not-allowed" />
+          </div>
+          <div>
+            <label for="mp-status-select" class="block font-extrabold mb-1">وضعیت</label>
+            <select id="mp-status-select" name="status" class="w-full px-3 py-2.5 rounded-xl bg-white dark:bg-zinc-950 border border-gold-500/35 font-bold">
+              <option value="آنلاین">آنلاین</option>
+              <option value="در ماموریت">در ماموریت</option>
+              <option value="مشغول">مشغول</option>
+              <option value="آفلاین">آفلاین</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label for="mp-bio-input" class="block font-extrabold mb-1">بیو</label>
+          <textarea id="mp-bio-input" name="bio" rows="2" maxlength="250" placeholder="چند کلمه درباره خودتان..." class="w-full px-3 py-2 rounded-xl bg-white dark:bg-zinc-950 border border-gold-500/35 font-bold"></textarea>
+        </div>
+
+        <div>
+          <label for="mp-edit-phone" class="block font-extrabold mb-1">داخلی یا شماره تماس</label>
+          <input id="mp-edit-phone" name="phone" type="tel" dir="ltr" maxlength="40" placeholder="09010558318" class="w-full px-3 py-2.5 rounded-xl bg-white dark:bg-zinc-950 border border-gold-500/35 font-bold text-right" />
+        </div>
+
+        <button type="submit" class="w-full py-2.5 rounded-xl gold-gradient text-zinc-950 font-black shadow-sm">ذخیره پروفایل</button>
+      </form>
+
+      <!-- بخش تغییر رمز عبور -->
+      <form id="mg-profile-form" class="mg-profile-section space-y-2.5 text-xs" novalidate>
+        <h3 class="text-sm font-black text-gold-700 dark:text-gold-400">تغییر رمز عبور</h3>
+        <div class="space-y-2">
+          <div>
+            <label for="mp-old-pass" class="block font-extrabold mb-1">رمز فعلی</label>
+            <input id="mp-old-pass" name="oldPassword" type="password" dir="ltr" autocomplete="current-password" required class="w-full px-3 py-2 rounded-xl bg-white dark:bg-zinc-950 border border-gold-500/35 font-bold text-left" />
+          </div>
+          <div class="mg-profile-grid">
+            <div>
+              <label for="mp-new-pass" class="block font-extrabold mb-1">رمز جدید</label>
+              <input id="mp-new-pass" name="newPassword" type="password" dir="ltr" autocomplete="new-password" required class="w-full px-3 py-2 rounded-xl bg-white dark:bg-zinc-950 border border-gold-500/35 font-bold text-left" />
+            </div>
+            <div>
+              <label for="mp-confirm-pass" class="block font-extrabold mb-1">تکرار رمز جدید</label>
+              <input id="mp-confirm-pass" name="confirmPassword" type="password" dir="ltr" autocomplete="new-password" required class="w-full px-3 py-2 rounded-xl bg-white dark:bg-zinc-950 border border-gold-500/35 font-bold text-left" />
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="w-full py-2.5 rounded-xl gold-gradient text-zinc-950 font-black shadow-sm">ذخیره رمز جدید</button>
+      </form>
+
+      <!-- سوییچر پیش‌نمایش دید نقش‌های تیم (انحصاری مدیر) -->
+      <div id="admin-role-preview-box" class="hidden p-3 rounded-2xl bg-amber-500/10 border border-amber-500/35 flex items-center justify-between gap-2 text-xs">
+        <label for="select-preview-role" class="font-black text-amber-800 dark:text-amber-300">👁️ پیش‌نمایش دید نقش‌های تیم:</label>
+        <select id="select-preview-role" class="px-3 py-1.5 rounded-xl bg-white dark:bg-zinc-900 border border-gold-500/40 font-black">
+          <option value="admin">👑 مدیریت</option>
+          <option value="supervisor">📋 سرپرست</option>
+          <option value="pro">⚡ پرفکت</option>
+          <option value="amateur">🔧 آماتور</option>
+          <option value="apprentice">🌱 شاگرد</option>
+        </select>
+      </div>
+    </section>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="fixed top-4 left-1/2 -translate-x-1/2 z-[260] space-y-2 pointer-events-none w-full max-w-sm px-4"></div>
+
+  <!-- ========================================================== -->
+  <!-- JAVASCRIPT ENGINE                                          -->
+  <!-- ========================================================== -->
+  <script>
+    (function () {
+      const STORAGE_KEY = 'mashhad_gostar_service_suite_v3';
+      const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+
+      function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+      function toPersianNum(val) {
+        if (val === null || val === undefined) return '';
+        return String(val).replace(/\d/g, d => persianDigits[d]);
+      }
+      function toEnglishDigits(str) {
+        if (!str) return '';
+        return String(str)
+          .replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
+          .replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+      }
+      function formatThousandsEn(num) {
+        const n = Math.floor(Number(num) || 0);
+        return n > 0 ? n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '';
+      }
+      function formatPrice(num) {
+        const n = Math.round(Number(num) || 0);
+        return toPersianNum(n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','));
+      }
+
+      function normalizeFuzzy(str) {
+        if (str === null || str === undefined) return '';
+        return toEnglishDigits(String(str))
+          .toLowerCase()
+          .replace(/ي/g, 'ی').replace(/ك/g, 'ک').replace(/[آأإ]/g, 'ا').replace(/ة/g, 'ه')
+          .replace(/[\u200B-\u200D\uFEFF]/g, ' ').replace(/[,،_\-]/g, '').replace(/\s+/g, ' ').trim();
+      }
+      function fuzzyMatch(haystackRaw, queryRaw) {
+        const q = normalizeFuzzy(queryRaw);
+        if (!q) return true;
+        const hay = normalizeFuzzy(haystackRaw);
+        const hayNoSpace = hay.replace(/\s+/g, '');
+        return q.split(' ').filter(Boolean).every(tok => hay.includes(tok) || hayNoSpace.includes(tok));
+      }
+
+      function getSystemJalaliDate(offsetDays = 0) {
+        try {
+          const target = new Date(Date.now() + offsetDays * 86400000);
+          const parts = new Intl.DateTimeFormat('en-US-u-ca-persian', { year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(target);
+          const y = (parts.find(p => p.type === 'year') || {}).value || '1405';
+          const m = (parts.find(p => p.type === 'month') || {}).value || '09';
+          const d = (parts.find(p => p.type === 'day') || {}).value || '01';
+          return `${y}/${m.padStart(2, '0')}/${d.padStart(2, '0')}`;
+        } catch (e) { return '1405/09/01'; }
+      }
+      function getSystemTimeStr() {
+        const now = new Date();
+        return `${toPersianNum(String(now.getHours()).padStart(2, '0'))}:${toPersianNum(String(now.getMinutes()).padStart(2, '0'))}`;
+      }
+      function getSystemTimestamp() {
+        return `${toPersianNum(getSystemJalaliDate(0))} • ${getSystemTimeStr()}`;
+      }
+      function jalaliToDays(jStr) {
+        const clean = toEnglishDigits(jStr || getSystemJalaliDate(0)).split(' ')[0];
+        const p = clean.split('/');
+        return (parseInt(p[0], 10) || 1405) * 365 + ((parseInt(p[1], 10) || 9) - 1) * 30 + (parseInt(p[2], 10) || 1);
+      }
+
+      /* تعریف مجوزهای قابل تیک زدن در ماژول پرسنل */
+      const PERMISSION_DEFS = [
+        { key: 'canForm',    label: '📝 ثبت گزارش کار' },
+        { key: 'canWork',    label: '📋 میز کار و چک‌لیست' },
+        { key: 'canApprove', label: '✅ تایید و ارجاع گزارش' },
+        { key: 'canArchive', label: '📂 مشاهده بایگانی' },
+        { key: 'canEditDel', label: '✏️ ویرایش و حذف' },
+        { key: 'canExport',  label: '📊 خروجی اکسل' },
+        { key: 'canStaff',   label: '👥 مدیریت پرسنل' }
+      ];
+
+      const DEFAULT_PERMS_BY_ROLE = {
+        admin:      { canForm: true,  canWork: true,  canApprove: true,  canArchive: true,  canEditDel: true,  canExport: true,  canStaff: true },
+        supervisor: { canForm: true,  canWork: true,  canApprove: true,  canArchive: true,  canEditDel: true,  canExport: true,  canStaff: false },
+        pro:        { canForm: true,  canWork: true,  canApprove: false, canArchive: true,  canEditDel: false, canExport: false, canStaff: false },
+        amateur:    { canForm: true,  canWork: true,  canApprove: false, canArchive: false, canEditDel: false, canExport: false, canStaff: false },
+        apprentice: { canForm: true,  canWork: true,  canApprove: false, canArchive: false, canEditDel: false, canExport: false, canStaff: false }
+      };
+
+      const ROLES_META = {
+        admin:      { label: 'مدیریت',        badge: '👑 مدیریت',        ring: '#D4AF37', glow: 'rgba(212, 175, 55, 0.45)', pillClass: 'bg-amber-500/20 text-amber-800 dark:text-amber-300' },
+        supervisor: { label: 'سرپرست',        badge: '📋 سرپرست',        ring: '#F97316', glow: 'rgba(249, 115, 22, 0.42)', pillClass: 'bg-orange-500/20 text-orange-800 dark:text-orange-300' },
+        pro:        { label: 'پرفکت/حرفه‌ای', badge: '⚡ پرفکت/حرفه‌ای', ring: '#A855F7', glow: 'rgba(168, 85, 247, 0.42)', pillClass: 'bg-purple-500/20 text-purple-800 dark:text-purple-300' },
+        amateur:    { label: 'آماتور',        badge: '🔧 آماتور',        ring: '#0EA5E9', glow: 'rgba(14, 165, 233, 0.42)', pillClass: 'bg-sky-500/20 text-sky-800 dark:text-sky-300' },
+        apprentice: { label: 'شاگرد',         badge: '🌱 شاگرد',         ring: '#94A3B8', glow: 'rgba(148, 163, 184, 0.42)', pillClass: 'bg-zinc-500/20 text-zinc-700 dark:text-zinc-300' }
+      };
+
+      const STATUS_META = {
+        pending:  { label: '🟡 در انتظار', badgeClass: 'bg-amber-500/20 text-amber-800 dark:text-amber-300' },
+        assigned: { label: '🔵 ارجاع‌شده', badgeClass: 'bg-indigo-500/20 text-indigo-800 dark:text-indigo-300' },
+        approved: { label: '🟢 تاییدشده',  badgeClass: 'bg-emerald-500/20 text-emerald-800 dark:text-emerald-300' },
+        rejected: { label: '🔴 برگشتی',    badgeClass: 'bg-rose-500/20 text-rose-700 dark:text-rose-300' }
+      };
+
+      const RATING_META = {
+        vip:    { label: '🟢 VIP',  pillClass: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300' },
+        normal: { label: '🟡 عادی', pillClass: 'bg-amber-500/15 text-amber-700 dark:text-amber-300' },
+        risk:   { label: '🔴 دقت',  pillClass: 'bg-rose-500/15 text-rose-700 dark:text-rose-300' }
+      };
+
+      function buildInitialStaff() {
+        return [
+          { id: 'st-1', username: 'erfan', password: '1234', name: 'مهندس عرفان مرادی', phone: '09010558318', bio: '', role: 'admin', active: true, status: 'آنلاین', avatar: '', perms: { ...DEFAULT_PERMS_BY_ROLE.admin } },
+          { id: 'st-2', username: 'supervisor', password: '1234', name: 'مهندس رضا کاظمی', phone: '09151110002', bio: '', role: 'supervisor', active: true, status: 'آنلاین', avatar: '', perms: { ...DEFAULT_PERMS_BY_ROLE.supervisor } },
+          { id: 'st-3', username: 'pro', password: '1234', name: 'حسین رضایی', phone: '09151110003', bio: '', role: 'pro', active: true, status: 'در ماموریت', avatar: '', perms: { ...DEFAULT_PERMS_BY_ROLE.pro } },
+          { id: 'st-4', username: 'amateur', password: '1234', name: 'سعید کریمی', phone: '09151110004', bio: '', role: 'amateur', active: true, status: 'آنلاین', avatar: '', perms: { ...DEFAULT_PERMS_BY_ROLE.amateur } },
+          { id: 'st-5', username: 'apprentice', password: '1234', name: 'امیرمحمد نوری', phone: '09151110005', bio: '', role: 'apprentice', active: true, status: 'آنلاین', avatar: '', perms: { ...DEFAULT_PERMS_BY_ROLE.apprentice } },
+          { id: 'st-6', username: 'mahak_op', password: '1234', name: 'خانم محمدی', phone: '09151110006', bio: '', role: 'supervisor', active: true, status: 'آنلاین', avatar: '', perms: { ...DEFAULT_PERMS_BY_ROLE.supervisor } }
+        ];
+      }
+
+      function buildInitialReports() {
+        return [
+          {
+            id: 'rep-101', code: 'SRV-101', date: getSystemJalaliDate(0), time: '۰۹:۲۰',
+            customerName: 'مهندس امیرحسین تبریزی', customerPhone: '09151158899', customerRating: 'vip',
+            address: 'مشهد، بلوار وکیل‌آباد، هنرستان ۱۵، پلاک ۲۴',
+            customerFault: 'خطای E04 پکیج و نوسان آب گرم مصرفی.',
+            techDiagnosis: 'خرابی سنسور NTC و رسوب مبدل ثانویه.',
+            parts: [
+              { name: 'سنسور NTC مستغرق', qty: 1, price: 380000, source: 'internal', hasInvoice: false },
+              { name: 'محلول اسیدشویی مبدل', qty: 2, price: 240000, source: 'external', hasInvoice: true }
+            ],
+            techNotes: 'فشار آب و گاز تست شد.', deviceStatus: 'tested', followUpDate: '',
+            status: 'approved', techId: 'st-3', techName: 'حسین رضایی',
+            assigneeId: 'st-6', assigneeName: 'خانم محمدی', rejectReason: '',
+            timeline: [
+              { time: `${toPersianNum(getSystemJalaliDate(0))} • ۰۹:۲۰`, actor: 'حسین رضایی', action: 'ثبت گزارش کار' },
+              { time: `${toPersianNum(getSystemJalaliDate(0))} • ۱۰:۱۰`, actor: 'خانم محمدی', action: 'تایید نهایی گزارش ✅' }
+            ]
+          },
+          {
+            id: 'rep-102', code: 'SRV-102', date: getSystemJalaliDate(0), time: '۱۱:۰۵',
+            customerName: 'حاج رضا فرهادی', customerPhone: '09153345566', customerRating: 'normal',
+            address: 'مشهد، بلوار سجاد، بهارستان، مجتمع سپهر',
+            customerFault: 'صدای غیرعادی پمپ سیرکولاتور.',
+            techDiagnosis: 'گریپاژ روتور پمپ و خرابی شیر هواگیر.',
+            parts: [
+              { name: 'شیر هواگیر اتوماتیک', qty: 1, price: 490000, source: 'internal', hasInvoice: false },
+              { name: 'کارتریج پمپ سیرکولاتور', qty: 1, price: 1850000, source: 'external', hasInvoice: true }
+            ],
+            techNotes: 'هواگیری انجام شد.', deviceStatus: 'followup', followUpDate: getSystemJalaliDate(5),
+            status: 'pending', techId: 'st-4', techName: 'سعید کریمی',
+            assigneeId: 'st-2', assigneeName: 'مهندس رضا کاظمی', rejectReason: '',
+            timeline: [
+              { time: `${toPersianNum(getSystemJalaliDate(0))} • ۱۱:۰۵`, actor: 'سعید کریمی', action: 'ثبت گزارش کار' }
+            ]
+          },
+          {
+            id: 'rep-103', code: 'SRV-103', date: getSystemJalaliDate(0), time: '۱۲:۳۰',
+            customerName: 'کلینیک تخصصی مهرگان', customerPhone: '09153321100', customerRating: 'vip',
+            address: 'مشهد، احمدآباد، نبش پرستار ۵',
+            customerFault: 'پکیج روشن نمی‌شود و فیوز می‌سوزد.',
+            techDiagnosis: 'نوسان برق و سوختگی وریستور برد اصلی.',
+            parts: [
+              { name: 'برد کنترل اصلی پکیج', qty: 1, price: 3450000, source: 'internal', hasInvoice: false }
+            ],
+            techNotes: 'نصب محافظ برق توصیه شد.', deviceStatus: 'tested', followUpDate: '',
+            status: 'assigned', techId: 'st-3', techName: 'حسین رضایی',
+            assigneeId: 'st-6', assigneeName: 'خانم محمدی', rejectReason: '',
+            timeline: [
+              { time: `${toPersianNum(getSystemJalaliDate(0))} • ۱۲:۳۰`, actor: 'حسین رضایی', action: 'ثبت گزارش کار' },
+              { time: `${toPersianNum(getSystemJalaliDate(0))} • ۱۲:۴۵`, actor: 'مهندس رضا کاظمی', action: 'ارجاع به خانم محمدی' }
+            ]
+          }
+        ];
+      }
+
+      function buildInitialChecklists() {
+        return [
+          {
+            id: 'cl-1',
+            title: 'پیگیری قطعات انبار و فاکتورها',
+            creatorId: 'st-2', creatorName: 'مهندس رضا کاظمی',
+            assigneeId: 'st-6', assigneeName: 'خانم محمدی',
+            date: getSystemJalaliDate(0),
+            items: [
+              { text: 'ثبت سنسور NTC گزارش SRV-101 در سیستم', done: true },
+              { text: 'بررسی فاکتور خرید کارتریج پمپ SRV-102', done: false }
+            ]
+          },
+          {
+            id: 'cl-2',
+            title: 'چک‌لیست تجهیزات کیف ابزار امروز',
+            creatorId: 'st-3', creatorName: 'حسین رضایی',
+            assigneeId: 'st-3', assigneeName: 'حسین رضایی',
+            date: getSystemJalaliDate(0),
+            items: [
+              { text: 'تست فشارسنج و آچار فرانسه', done: true },
+              { text: 'همراه داشتن ۲ عدد سنسور NTC یدک', done: false }
+            ]
+          }
+        ];
+      }
+
+      let state = {
+        staff: [],
+        reports: [],
+        checklists: [],
+        currentUser: null,
+        effectiveRole: null,
+        activeTab: 'service-form',
+        wsActivePane: 'reports',
+        formParts: [{ name: '', qty: 1, price: 0, source: 'internal', hasInvoice: false }],
+        pendingReportDraft: null,
+        activeCaseId: null,
+        wsFilters: { status: 'all', search: '', staff: 'all', rating: 'all', date: 'all', followupOnly: false, mine: false },
+        archFilters: { search: '', status: 'all' },
+        staffFilters: { role: 'all', search: '' }
+      };
+
+      function loadState() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            state.staff = Array.isArray(parsed.staff) && parsed.staff.length ? parsed.staff : buildInitialStaff();
+            state.reports = Array.isArray(parsed.reports) && parsed.reports.length ? parsed.reports : buildInitialReports();
+            state.checklists = Array.isArray(parsed.checklists) ? parsed.checklists : buildInitialChecklists();
+            return;
+          }
+        } catch (e) {}
+        state.staff = buildInitialStaff();
+        state.reports = buildInitialReports();
+        state.checklists = buildInitialChecklists();
+      }
+
+      function saveState() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({
+            staff: state.staff,
+            reports: state.reports,
+            checklists: state.checklists
+          }));
+        } catch (e) {}
+      }
+
+      function showToast(msg, type = 'success') {
+        const container = document.getElementById('toast-container');
+        if (!container) return;
+        const el = document.createElement('div');
+        const cls = type === 'error' ? 'bg-rose-600 text-white' : type === 'info' ? 'bg-zinc-900 text-gold-400 border border-gold-500/40' : 'emerald-gradient text-white';
+        el.className = `pointer-events-auto px-4 py-2.5 rounded-2xl shadow-2xl text-xs font-bold ${cls}`;
+        el.textContent = msg;
+        container.appendChild(el);
+        setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity 0.25s'; setTimeout(() => el.remove(), 250); }, 2800);
+      }
+
+      function copyToClipboard(text, msg) {
+        const fb = () => {
+          const ta = document.createElement('textarea');
+          ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+          document.body.appendChild(ta); ta.select();
+          try { document.execCommand('copy'); showToast(msg || 'کپی شد!'); } catch (e) {}
+          ta.remove();
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(() => showToast(msg || 'کپی شد!')).catch(fb);
+        } else fb();
+      }
+
+      function openModal(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.classList.remove('hidden'); el.classList.add('flex');
+        document.body.classList.add('modal-open');
+      }
+      function closeModal(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.classList.add('hidden'); el.classList.remove('flex');
+        if (!Array.from(document.querySelectorAll('.app-modal')).some(m => !m.classList.contains('hidden'))) {
+          document.body.classList.remove('modal-open');
+        }
+      }
+
+      function calcPartsTotals(parts) {
+        let internal = 0, external = 0;
+        (parts || []).forEach(p => {
+          const sum = (Number(p.qty) || 0) * (Number(p.price) || 0);
+          if (p.source === 'external') external += sum; else internal += sum;
+        });
+        return { internal, external, total: internal + external };
+      }
+
+      function getEffectivePerms() {
+        const u = state.currentUser;
+        if (!u) return DEFAULT_PERMS_BY_ROLE.apprentice;
+        if (u.role === 'admin' && state.effectiveRole !== 'admin') {
+          return DEFAULT_PERMS_BY_ROLE[state.effectiveRole] || DEFAULT_PERMS_BY_ROLE.apprentice;
+        }
+        return Object.assign({}, DEFAULT_PERMS_BY_ROLE[u.role] || DEFAULT_PERMS_BY_ROLE.apprentice, u.perms || {});
+      }
+
+      function updateLiveTickerAndClock() {
+        const now = new Date();
+        const hh = toPersianNum(String(now.getHours()).padStart(2, '0'));
+        const mm = toPersianNum(String(now.getMinutes()).padStart(2, '0'));
+        const clockEl = document.getElementById('live-clock-text');
+        if (clockEl) clockEl.textContent = `${toPersianNum(getSystemJalaliDate(0))} • ${hh}:${mm}`;
+
+        const visibleReps = getVisibleReports();
+        document.getElementById('ticker-pending-count').textContent = `${toPersianNum(visibleReps.filter(r => r.status === 'pending' || r.status === 'assigned').length)} در انتظار`;
+        document.getElementById('ticker-approved-count').textContent = `${toPersianNum(visibleReps.filter(r => r.status === 'approved').length)} تاییدشده`;
+        document.getElementById('ticker-followup-count').textContent = `${toPersianNum(visibleReps.filter(r => r.deviceStatus === 'followup').length)} پیگیری`;
+      }
+
+      function getVisibleReports() {
+        const perms = getEffectivePerms();
+        if (perms.canApprove || perms.canArchive) return state.reports;
+        return state.reports.filter(r => r.techId === state.currentUser?.id || r.assigneeId === state.currentUser?.id);
+      }
+
+      /* ==========================================================
+         ۱. چیدمان پویا و کپسول لغزنده GSAP
+         ========================================================== */
+      function getAllowedTabs() {
+        const perms = getEffectivePerms();
+        const visibleReps = getVisibleReports();
+        const wsBadge = visibleReps.filter(r => r.status === 'pending' || r.status === 'assigned' || r.status === 'rejected').length;
+
+        const tabs = [];
+        if (state.effectiveRole === 'admin') {
+          tabs.push({ id: 'dashboard', label: 'داشبورد', icon: '👑', count: 0 });
+        }
+        if (perms.canForm) {
+          tabs.push({ id: 'service-form', label: 'ثبت گزارش', icon: '📝', count: 0 });
+        }
+        if (perms.canWork) {
+          tabs.push({ id: 'workspace', label: 'میز کار', icon: '📋', count: wsBadge });
+        }
+        if (perms.canArchive) {
+          tabs.push({ id: 'archive', label: 'بایگانی', icon: '📂', count: state.reports.length });
+        }
+        if (perms.canStaff) {
+          tabs.push({ id: 'staff', label: 'پرسنل', icon: '👥', count: state.staff.length });
+        }
+        return tabs.length ? tabs : [{ id: 'service-form', label: 'ثبت گزارش', icon: '📝', count: 0 }];
+      }
+
+      function animateSlidingPill(activeBtn, immediate = false) {
+        const pill = document.getElementById('nav-sliding-pill');
+        if (!pill || !activeBtn) return;
+        const left = activeBtn.offsetLeft;
+        const width = activeBtn.offsetWidth;
+        if (typeof gsap !== 'undefined' && !immediate) {
+          gsap.to(pill, { x: left, width: width, duration: 0.35, ease: 'power3.out' });
+        } else {
+          pill.style.transform = `translateX(${left}px)`;
+          pill.style.width = `${width}px`;
+        }
+      }
+
+      function applyRoleUI() {
+        const user = state.currentUser;
+        if (!user) return;
+        const role = state.effectiveRole;
+        const perms = getEffectivePerms();
+        const rMeta = ROLES_META[role] || ROLES_META.apprentice;
+
+        const summaryRing = document.getElementById('top-avatar-ring');
+        summaryRing.style.setProperty('--tier-ring', rMeta.ring);
+        summaryRing.style.setProperty('--tier-glow', rMeta.glow);
+
+        const statusDot = document.getElementById('top-status-dot');
+        if (statusDot) {
+          const st = user.status || 'آنلاین';
+          const dotColor = st === 'در ماموریت' ? 'bg-sky-500' : st === 'مشغول' ? 'bg-amber-500' : st === 'آفلاین' ? 'bg-zinc-400' : 'bg-emerald-500';
+          statusDot.className = `w-2.5 h-2.5 rounded-full ${dotColor} ring-2 ring-white dark:ring-zinc-900 absolute -bottom-0.5 -left-0.5`;
+        }
+
+        const topImg = document.getElementById('top-avatar-img');
+        const topInit = document.getElementById('top-avatar-initial');
+        if (user.avatar) {
+          topImg.src = user.avatar;
+          topImg.classList.remove('hidden');
+          topInit.classList.add('hidden');
+        } else {
+          topImg.classList.add('hidden');
+          topInit.classList.remove('hidden');
+          topInit.textContent = user.name.trim().charAt(0);
+        }
+
+        document.getElementById('header-user-short').textContent = user.name;
+        document.getElementById('current-user-badge').textContent = user.name;
+
+        const staffMenuBtn = document.getElementById('btn-n8n-sync-now');
+        staffMenuBtn.classList.toggle('hidden', !perms.canStaff);
+
+        const previewBox = document.getElementById('admin-role-preview-box');
+        const previewBanner = document.getElementById('role-preview-banner');
+        if (user.role === 'admin') {
+          previewBox.classList.remove('hidden');
+          document.getElementById('select-preview-role').value = role;
+          if (role !== 'admin') {
+            previewBanner.classList.remove('hidden');
+            document.getElementById('preview-role-name-label').textContent = rMeta.label;
+          } else {
+            previewBanner.classList.add('hidden');
+          }
+        } else {
+          previewBox.classList.add('hidden');
+          previewBanner.classList.add('hidden');
+        }
+
+        document.getElementById('btn-top-excel').classList.toggle('hidden', !perms.canExport);
+
+        const tabs = getAllowedTabs();
+        const navEl = document.getElementById('dynamic-module-nav');
+        navEl.innerHTML = `<div id="nav-sliding-pill"></div>` + tabs.map(t => `
+          <a href="#${t.id}" data-tab="${t.id}" class="nav-tab-btn">
+            <span>${t.icon}</span>
+            <span>${t.label}</span>
+            ${t.count > 0 ? `<span class="nav-count">${toPersianNum(t.count)}</span>` : ''}
+          </a>
+        `).join('');
+
+        if (!tabs.some(t => t.id === state.activeTab)) {
+          state.activeTab = tabs[0].id;
+        }
+        switchTab(state.activeTab, true);
+      }
+
+      function switchTab(tabId, immediatePill = false) {
+        const allowed = getAllowedTabs().map(t => t.id);
+        if (!allowed.includes(tabId)) tabId = allowed[0];
+        state.activeTab = tabId;
+        if (location.hash !== '#' + tabId) history.replaceState(null, '', '#' + tabId);
+
+        ['dashboard', 'service-form', 'workspace', 'archive', 'staff'].forEach(id => {
+          const sec = document.getElementById(`view-${id}`);
+          if (sec) sec.classList.toggle('hidden', id !== tabId);
+        });
+
+        let activeBtn = null;
+        document.querySelectorAll('#dynamic-module-nav .nav-tab-btn').forEach(btn => {
+          const active = btn.getAttribute('data-tab') === tabId;
+          btn.classList.toggle('is-active', active);
+          btn.classList.toggle('text-zinc-950', active);
+          if (active) activeBtn = btn;
+        });
+
+        requestAnimationFrame(() => animateSlidingPill(activeBtn, immediatePill));
+
+        if (typeof gsap !== 'undefined') {
+          const activeSec = document.getElementById(`view-${tabId}`);
+          if (activeSec) {
+            gsap.fromTo(activeSec, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.28, ease: 'power2.out', clearProps: 'transform' });
+          }
+        }
+
+        updateLiveTickerAndClock();
+        if (tabId === 'dashboard') renderDashboardView();
+        if (tabId === 'service-form') renderServiceFormView();
+        if (tabId === 'workspace') renderWorkspaceView();
+        if (tabId === 'archive') renderArchiveView();
+        if (tabId === 'staff') renderStaffView();
+      }
+
+      /* ==========================================================
+         ۲. داشبورد مدیریت (#view-dashboard)
+         ========================================================== */
+      function renderDashboardView() {
+        const todayStr = getSystemJalaliDate(0);
+        const todayReports = state.reports.filter(r => r.date === todayStr);
+        let sumInt = 0, sumExt = 0;
+        state.reports.forEach(r => {
+          const tot = calcPartsTotals(r.parts);
+          sumInt += tot.internal; sumExt += tot.external;
+        });
+        document.getElementById('kpi-today-services').textContent = `${toPersianNum(todayReports.length)} سرویس`;
+        document.getElementById('kpi-internal-parts').textContent = `${formatPrice(sumInt)} تومان`;
+        document.getElementById('kpi-external-parts').textContent = `${formatPrice(sumExt)} تومان`;
+        document.getElementById('kpi-followup-devices').textContent = `${toPersianNum(state.reports.filter(r => r.deviceStatus === 'followup').length)} مورد`;
+
+        const bottlenecks = state.reports.filter(r => r.status === 'pending' || r.status === 'assigned');
+        const bnList = document.getElementById('admin-bottlenecks-list');
+        bnList.innerHTML = bottlenecks.length === 0
+          ? `<div class="p-5 rounded-2xl bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 text-xs font-black text-center">همه گزارش‌ها بررسی شده‌اند ✅</div>`
+          : bottlenecks.map(r => {
+              const st = STATUS_META[r.status];
+              return `
+                <div class="p-3 rounded-2xl bg-cream-100/90 dark:bg-zinc-900/90 border border-gold-500/25 flex items-center justify-between gap-2 text-xs">
+                  <div>
+                    <span class="font-mono font-black text-gold-700 dark:text-gold-400 ml-1.5">${r.code}</span>
+                    <strong class="font-black">${r.customerName}</strong>
+                    <span class="mr-1.5 px-2 py-0.5 rounded-full text-[10px] font-black ${st.badgeClass}">${st.label}</span>
+                  </div>
+                  <button type="button" data-open-case="${r.id}" class="px-3 py-1.5 rounded-xl bg-zinc-900 text-gold-400 text-[11px] font-black shrink-0">بررسی</button>
+                </div>
+              `;
+            }).join('');
+
+        const techUsers = state.staff.filter(s => s.role !== 'admin');
+        const maxReps = Math.max(1, ...techUsers.map(u => state.reports.filter(r => r.techId === u.id).length));
+        document.getElementById('admin-tech-performance-bars').innerHTML = techUsers.map(u => {
+          const cnt = state.reports.filter(r => r.techId === u.id).length;
+          const pct = Math.round((cnt / maxReps) * 100);
+          const rm = ROLES_META[u.role] || ROLES_META.apprentice;
+          return `
+            <div class="space-y-1 text-xs">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-1.5">
+                  <span class="w-2.5 h-2.5 rounded-full" style="background:${rm.ring}"></span>
+                  <strong class="font-black">${u.name}</strong>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${rm.pillClass}">${rm.label}</span>
+                </div>
+                <span class="text-[11px] font-bold text-zinc-500">${toPersianNum(cnt)} گزارش</span>
+              </div>
+              <div class="w-full h-2 bg-zinc-200 dark:bg-zinc-800 rounded-full overflow-hidden">
+                <div class="h-full rounded-full" style="width:${pct}%; background:${rm.ring}"></div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      /* ==========================================================
+         ۳. فرم ثبت گزارش کار (#view-service-form)
+         ========================================================== */
+      function renderServiceFormView() {
+        const editId = document.getElementById('sf-edit-report-id').value;
+        document.getElementById('form-tracking-preview').textContent = editId
+          ? (state.reports.find(r => r.id === editId)?.code || 'ویرایش')
+          : `SRV-${101 + state.reports.length}`;
+        renderFormPartsRows();
+      }
+
+      function addLaborRow(description = '', amount = '') {
+        const rows = document.getElementById('sf-labor-rows');
+        if (!rows) return;
+        const row = document.createElement('div');
+        row.className = 'grid grid-cols-1 sm:grid-cols-12 gap-2 items-end p-2 rounded-xl bg-white/85 dark:bg-zinc-900/90 border border-gold-500/25';
+        row.innerHTML = `
+          <label class="sm:col-span-7 text-[11px] font-bold text-zinc-500">شرح دستمزد
+            <input type="text" data-labor-description value="${String(description).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}" placeholder="شرح خدمت..." class="w-full mt-1 px-3 py-2 rounded-xl bg-cream-100 dark:bg-zinc-800 border border-zinc-300/70 dark:border-zinc-700 font-bold" />
+          </label>
+          <label class="sm:col-span-4 text-[11px] font-bold text-zinc-500">مبلغ (تومان)
+            <input type="number" min="0" step="1" data-labor-amount value="${Number(amount) || ''}" placeholder="مبلغ" class="w-full mt-1 px-3 py-2 rounded-xl bg-cream-100 dark:bg-zinc-800 border border-zinc-300/70 dark:border-zinc-700 font-bold" />
+          </label>
+          <button type="button" data-remove-labor-row title="حذف ردیف" class="sm:col-span-1 h-9 rounded-lg bg-rose-500/15 text-rose-600 font-black">×</button>`;
+        rows.appendChild(row);
+        calcBillingTotals();
+      }
+
+      function calcBillingTotals() {
+        const partsTotal = calcPartsTotals(state.formParts).total;
+        const laborTotal = Array.from(document.querySelectorAll('#sf-labor-rows [data-labor-amount]'))
+          .reduce((sum, input) => sum + (Number(input.value) || 0), 0);
+        const discount = Math.max(0, Number(document.getElementById('sf-discount')?.value) || 0);
+        const payable = Math.max(0, partsTotal + laborTotal - discount);
+        const display = document.getElementById('sf-grand-payable');
+        if (display) display.textContent = formatPrice(payable);
+      }
+
+      function renderFormPartsRows() {
+        const listEl = document.getElementById('sf-parts-list');
+        if (!listEl) return;
+        listEl.innerHTML = state.formParts.map((p, idx) => {
+          const rowSum = (Number(p.qty) || 0) * (Number(p.price) || 0);
+          return `
+            <div data-part-row="${idx}" class="p-3 rounded-2xl bg-white/85 dark:bg-zinc-900/90 border border-gold-500/30 space-y-2 text-xs">
+              <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-end">
+                <div class="md:col-span-4">
+                  <label class="block text-[11px] font-bold text-zinc-500 mb-1">نام قطعه / لوازم</label>
+                  <input type="text" data-part-idx="${idx}" data-part-field="name" value="${esc(p.name)}" placeholder="شرح قطعه..." class="w-full px-3 py-2 rounded-xl bg-cream-100 dark:bg-zinc-800 border border-zinc-300/70 dark:border-zinc-700 font-bold" />
+                </div>
+
+                <div class="md:col-span-2">
+                  <label class="block text-xs font-medium text-gray-500 mb-1">کد کالا</label>
+                  <input type="text" value="${esc(p.itemCode)}" data-part-idx="${idx}" data-part-field="itemCode" placeholder="اختیاری" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white/80" />
+                </div>
+
+                <div class="md:col-span-3">
+                  <label class="block text-[11px] font-bold text-zinc-500 mb-1">تعداد</label>
+                  <div class="flex items-center gap-1">
+                    <button type="button" data-part-qty-step="${idx}:-1" class="w-8 h-8 rounded-lg bg-zinc-200 dark:bg-zinc-800 font-black">-</button>
+                    <input type="number" min="1" data-part-idx="${idx}" data-part-field="qty" value="${p.qty}" class="w-full text-center py-1.5 rounded-lg bg-cream-100 dark:bg-zinc-800 border border-zinc-300/70 dark:border-zinc-700 font-black" />
+                    <button type="button" data-part-qty-step="${idx}:1" class="w-8 h-8 rounded-lg bg-zinc-200 dark:bg-zinc-800 font-black">+</button>
+                  </div>
+                </div>
+
+                <div class="md:col-span-2">
+                  <label class="block text-[11px] font-bold text-zinc-500 mb-1">مبلغ واحد (تومان)</label>
+                  <input type="text" inputmode="numeric" dir="ltr" data-part-idx="${idx}" data-part-field="price" value="${p.price ? formatThousandsEn(p.price) : ''}" placeholder="۰ تومان" class="w-full px-3 py-2 rounded-xl bg-cream-100 dark:bg-zinc-800 border border-zinc-300/70 dark:border-zinc-700 font-black text-left" />
+                </div>
+
+                <div class="md:col-span-1 flex justify-end">
+                  ${state.formParts.length > 1 ? `<button type="button" data-part-del="${idx}" class="px-2.5 py-2 rounded-xl bg-rose-500/15 text-rose-600 font-black">🗑️</button>` : ''}
+                </div>
+              </div>
+
+              <div class="flex flex-wrap items-center justify-between gap-2 pt-1.5 border-t border-zinc-200/60 dark:border-zinc-800">
+                <div class="flex flex-wrap items-center gap-2">
+                  <div class="inline-flex p-0.5 rounded-xl bg-cream-200 dark:bg-zinc-800">
+                    <button type="button" data-part-src="${idx}:internal" class="px-2.5 py-1 rounded-lg text-[11px] font-black ${p.source === 'internal' ? 'gold-gradient text-zinc-950' : 'text-zinc-500'}">🏢 انبار</button>
+                    <button type="button" data-part-src="${idx}:external" class="px-2.5 py-1 rounded-lg text-[11px] font-black ${p.source === 'external' ? 'bg-indigo-600 text-white' : 'text-zinc-500'}">🛒 خرید خارج</button>
+                  </div>
+                  ${p.source === 'external' ? `
+                    <label class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 text-[11px] font-bold cursor-pointer">
+                      <input type="checkbox" data-part-idx="${idx}" data-part-field="hasInvoice" ${p.hasInvoice ? 'checked' : ''} class="accent-indigo-600" />
+                      <span>با فاکتور</span>
+                    </label>
+                  ` : ''}
+                </div>
+                <span class="text-[11px] font-bold text-zinc-500">جمع: <strong data-part-row-total="${idx}" class="text-emerald-700 dark:text-emerald-400 font-black">${formatPrice(rowSum)} تومان</strong></span>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        updateFormPartsTotalsUI();
+      }
+
+      function updateFormPartsTotalsUI() {
+        const tot = calcPartsTotals(state.formParts);
+        document.getElementById('sf-sum-internal').textContent = `${formatPrice(tot.internal)} تومان`;
+        document.getElementById('sf-sum-external').textContent = `${formatPrice(tot.external)} تومان`;
+        document.getElementById('sf-sum-total').textContent = `${formatPrice(tot.total)} تومان`;
+        calcBillingTotals();
+      }
+
+      /* ==========================================================
+         ۴. میز کار دو تبه (گزارش‌های کار | چک‌لیست‌ها)
+         ========================================================== */
+      function renderWorkspaceView() {
+        const visibleReps = getVisibleReports();
+        const myChecklists = getVisibleChecklists();
+
+        document.getElementById('ws-reports-badge').textContent = toPersianNum(visibleReps.length);
+        document.getElementById('ws-checklists-badge').textContent = toPersianNum(myChecklists.length);
+
+        const isRepPane = state.wsActivePane === 'reports';
+        document.getElementById('ws-pane-reports').classList.toggle('hidden', !isRepPane);
+        document.getElementById('ws-pane-checklists').classList.toggle('hidden', isRepPane);
+        document.getElementById('btn-ws-toggle-filters').classList.toggle('hidden', !isRepPane);
+        document.getElementById('btn-ws-new-checklist').classList.toggle('hidden', isRepPane);
+
+        document.querySelectorAll('.ws-pane-btn').forEach(btn => {
+          const active = btn.getAttribute('data-ws-pane') === state.wsActivePane;
+          btn.className = active
+            ? 'ws-pane-btn py-2 px-4 rounded-lg text-xs font-black gold-gradient text-zinc-950 shadow-sm transition'
+            : 'ws-pane-btn py-2 px-4 rounded-lg text-xs font-bold text-zinc-600 dark:text-zinc-300 transition';
+        });
+
+        if (isRepPane) renderWorkspaceReports();
+        else renderWorkspaceChecklists();
+      }
+
+      function renderWorkspaceReports() {
+        const visibleReps = getVisibleReports();
+        const perms = getEffectivePerms();
+
+        document.getElementById('ws-cnt-all').textContent = toPersianNum(visibleReps.length);
+        document.getElementById('ws-cnt-pending').textContent = toPersianNum(visibleReps.filter(r => r.status === 'pending').length);
+        document.getElementById('ws-cnt-assigned').textContent = toPersianNum(visibleReps.filter(r => r.status === 'assigned').length);
+        document.getElementById('ws-cnt-approved').textContent = toPersianNum(visibleReps.filter(r => r.status === 'approved').length);
+        document.getElementById('ws-cnt-rejected').textContent = toPersianNum(visibleReps.filter(r => r.status === 'rejected').length);
+
+        document.querySelectorAll('#ws-status-tabs .ws-tab-btn').forEach(btn => {
+          const active = btn.getAttribute('data-ws-status') === state.wsFilters.status;
+          btn.classList.toggle('ring-2', active);
+          btn.classList.toggle('ring-gold-500', active);
+        });
+
+        const staffSel = document.getElementById('ws-filter-staff');
+        const oldVal = staffSel.value;
+        staffSel.innerHTML = `<option value="all">همه پرسنل</option>` + state.staff.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+        staffSel.value = state.staff.some(s => s.id === oldVal) ? oldVal : 'all';
+
+        const f = state.wsFilters;
+        const myId = state.currentUser?.id;
+        const isMine = r => r.assigneeId === myId || (r.techId === myId && r.status !== 'approved');
+        document.getElementById('ws-cnt-mine').textContent = toPersianNum(visibleReps.filter(r => isMine(r) && r.status !== 'approved').length);
+        const mineBtn = document.getElementById('ws-mine-btn');
+        mineBtn.classList.toggle('gold-gradient', !!f.mine);
+        mineBtn.classList.toggle('text-zinc-950', !!f.mine);
+        const todayDays = jalaliToDays(getSystemJalaliDate(0));
+        const filtered = visibleReps.filter(r => {
+          if (f.mine && !isMine(r)) return false;
+          if (f.status !== 'all' && r.status !== f.status) return false;
+          if (f.staff !== 'all' && r.techId !== f.staff && r.assigneeId !== f.staff) return false;
+          if (f.rating !== 'all' && r.customerRating !== f.rating) return false;
+          if (f.followupOnly && r.deviceStatus !== 'followup') return false;
+          if (f.date === 'today' && r.date !== getSystemJalaliDate(0)) return false;
+          if (f.date === 'week' && (todayDays - jalaliToDays(r.date)) > 7) return false;
+          if (f.search && !fuzzyMatch(`${r.code} ${r.customerName} ${r.customerPhone} ${r.techName} ${r.assigneeName}`, f.search)) return false;
+          return true;
+        });
+
+        const container = document.getElementById('workspace-checklist-container');
+        if (filtered.length === 0) {
+          container.innerHTML = `<div class="glass-panel rounded-3xl p-6 text-center text-xs font-bold text-zinc-500">موردی در میز کار یافت نشد.</div>`;
+          return;
+        }
+
+        container.innerHTML = filtered.map(r => {
+          const st = STATUS_META[r.status] || STATUS_META.pending;
+          const rt = RATING_META[r.customerRating] || RATING_META.normal;
+          const tot = calcPartsTotals(r.parts);
+          const canEditOrDel = perms.canEditDel || (r.techId === state.currentUser?.id && r.status !== 'approved');
+
+          return `
+            <details class="glass-panel rounded-2xl border-r-4 ${r.status === 'approved' ? 'border-r-emerald-500' : r.status === 'assigned' ? 'border-r-indigo-500' : r.status === 'rejected' ? 'border-r-rose-500' : 'border-r-amber-500'} group">
+              <summary class="list-none cursor-pointer p-3.5 sm:p-4 flex flex-wrap items-center justify-between gap-2 select-none">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="font-mono text-xs font-black text-gold-700 dark:text-gold-400">${r.code}</span>
+                  <strong class="text-xs sm:text-sm font-black">${r.customerName}</strong>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-black ${rt.pillClass}">${rt.label}</span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-black ${st.badgeClass}">${st.label}</span>
+                </div>
+
+                <div class="flex items-center gap-2">
+                  <strong class="text-xs font-black text-emerald-700 dark:text-emerald-400">${formatPrice(tot.total)} تومان</strong>
+                  <span class="text-zinc-400 text-sm transition-transform group-open:rotate-180">⌄</span>
+                </div>
+              </summary>
+
+              <div class="px-4 pb-4 pt-2 border-t border-zinc-200/60 dark:border-zinc-800 space-y-2.5 text-xs">
+                <div class="flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-zinc-500">
+                  <span>👨‍🔧 ثبت‌کننده: <strong>${r.techName}</strong></span>
+                  <span>📌 مسئول: <strong class="text-indigo-600 dark:text-indigo-400">${r.assigneeName}</strong></span>
+                  <span>📅 ${toPersianNum(r.date)} (${r.time})</span>
+                </div>
+                <p class="text-zinc-700 dark:text-zinc-200"><strong>تشخیص:</strong> ${r.techDiagnosis}</p>
+                ${r.rejectReason ? `<p class="p-2 rounded-xl bg-rose-500/15 text-rose-600 font-bold">⚠️ دلیل برگشت: ${r.rejectReason}</p>` : ''}
+
+                <div class="flex flex-wrap items-center justify-end gap-1.5 pt-1">
+                  ${perms.canApprove && r.status !== 'approved' ? `
+                    <button type="button" data-quick-approve="${r.id}" class="px-3 py-1.5 rounded-xl emerald-gradient text-white font-black">✅ تایید</button>
+                  ` : ''}
+                  <button type="button" data-open-case="${r.id}" class="px-3 py-1.5 rounded-xl bg-zinc-900 text-gold-400 font-black">📂 جزئیات / ارجاع</button>
+                  ${canEditOrDel ? `
+                    <button type="button" data-edit-report="${r.id}" class="px-2.5 py-1.5 rounded-xl bg-blue-500/15 text-blue-600 dark:text-blue-400 font-black">✏️ ویرایش</button>
+                    <button type="button" data-delete-report="${r.id}" class="px-2.5 py-1.5 rounded-xl bg-rose-500/15 text-rose-600 font-black">🗑️ حذف</button>
+                  ` : ''}
+                </div>
+              </div>
+            </details>
+          `;
+        }).join('');
+      }
+
+      /* چک‌لیست‌های شخصی و همکاران در میز کار */
+      function getVisibleChecklists() {
+        const uid = state.currentUser?.id;
+        if (state.effectiveRole === 'admin' || state.effectiveRole === 'supervisor') return state.checklists;
+        return state.checklists.filter(c => c.creatorId === uid || c.assigneeId === uid);
+      }
+
+      function renderWorkspaceChecklists() {
+        const sel = document.getElementById('cl-assignee');
+        const oldVal = sel.value;
+        sel.innerHTML = state.staff.filter(s => s.active).map(s =>
+          `<option value="${s.id}">${s.id === state.currentUser?.id ? `خودم (${s.name})` : s.name}</option>`
+        ).join('');
+        if (oldVal && state.staff.some(s => s.id === oldVal)) sel.value = oldVal;
+        else if (state.currentUser) sel.value = state.currentUser.id;
+
+        const list = getVisibleChecklists();
+        const grid = document.getElementById('ws-checklists-grid');
+        if (list.length === 0) {
+          grid.innerHTML = `<div class="col-span-full glass-panel rounded-3xl p-6 text-center text-xs font-bold text-zinc-500">چک‌لیستی ثبت نشده است.</div>`;
+          return;
+        }
+
+        grid.innerHTML = list.map(cl => {
+          const isPersonal = cl.creatorId === cl.assigneeId;
+          const doneCount = (cl.items || []).filter(it => it.done).length;
+          return `
+            <div class="glass-panel rounded-3xl p-4 border-r-4 ${isPersonal ? 'border-r-gold-500' : 'border-r-indigo-500'} flex flex-col justify-between gap-3 text-xs">
+              <div class="space-y-2.5">
+                <div class="flex items-start justify-between gap-2">
+                  <div>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-black ${isPersonal ? 'bg-gold-500/20 text-gold-700 dark:text-gold-300' : 'bg-indigo-500/20 text-indigo-700 dark:text-indigo-300'}">
+                      ${isPersonal ? '👤 شخصی' : `📤 از ${cl.creatorName} به ${cl.assigneeName}`}
+                    </span>
+                    <h4 class="text-sm font-black mt-1">${cl.title}</h4>
+                  </div>
+                  <span class="text-[11px] font-black text-emerald-600 dark:text-emerald-400 shrink-0">${toPersianNum(doneCount)}/${toPersianNum(cl.items.length)}</span>
+                </div>
+
+                <div class="space-y-1.5">
+                  ${(cl.items || []).map((it, idx) => `
+                    <label class="flex items-center gap-2 p-2 rounded-xl bg-cream-100/80 dark:bg-zinc-900/80 cursor-pointer">
+                      <input type="checkbox" data-cl-toggle="${cl.id}:${idx}" ${it.done ? 'checked' : ''} class="w-4 h-4 accent-emerald-600 rounded" />
+                      <span class="${it.done ? 'line-through opacity-60' : 'font-bold'}">${it.text}</span>
+                    </label>
+                  `).join('')}
+                </div>
+              </div>
+
+              <div class="pt-2 border-t border-zinc-200/70 dark:border-zinc-800 flex items-center justify-between text-[11px]">
+                <span class="text-zinc-400">${toPersianNum(cl.date)}</span>
+                <div class="flex items-center gap-1.5">
+                  <button type="button" data-cl-edit="${cl.id}" class="px-2.5 py-1 rounded-lg bg-blue-500/15 text-blue-600 dark:text-blue-400 font-black">✏️ ویرایش</button>
+                  <button type="button" data-cl-del="${cl.id}" class="px-2.5 py-1 rounded-lg bg-rose-500/15 text-rose-600 font-black">🗑️ حذف</button>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      /* ==========================================================
+         ۵. بایگانی (#view-archive - کارت‌های زیبا و بازشونده)
+         ========================================================== */
+      function renderArchiveView() {
+        const q = state.archFilters.search;
+        const stFilter = state.archFilters.status;
+        const perms = getEffectivePerms();
+
+        const phoneCount = {};
+        state.reports.forEach(r => {
+          const p = toEnglishDigits(r.customerPhone);
+          phoneCount[p] = (phoneCount[p] || 0) + 1;
+        });
+
+        const list = state.reports.filter(r => {
+          if (stFilter !== 'all' && r.status !== stFilter) return false;
+          const partsText = (r.parts || []).map(p => p.name).join(' ');
+          if (q && !fuzzyMatch(`${r.code} ${r.customerName} ${r.customerPhone} ${r.techName} ${r.address} ${partsText}`, q)) return false;
+          return true;
+        });
+
+        const grid = document.getElementById('archive-cards-grid');
+        if (list.length === 0) {
+          grid.innerHTML = `<div class="col-span-full glass-panel rounded-3xl p-8 text-center text-xs font-bold text-zinc-500">پرونده‌ای یافت نشد.</div>`;
+          return;
+        }
+
+        grid.innerHTML = list.map(r => {
+          const st = STATUS_META[r.status] || STATUS_META.pending;
+          const rt = RATING_META[r.customerRating] || RATING_META.normal;
+          const tot = calcPartsTotals(r.parts);
+          const isRepeat = (phoneCount[toEnglishDigits(r.customerPhone)] || 0) > 1;
+
+          return `
+            <details class="glass-panel rounded-3xl border border-gold-500/35 overflow-hidden group">
+              <summary class="list-none cursor-pointer p-4 sm:p-5 space-y-2.5 select-none">
+                <div class="flex items-center justify-between gap-2">
+                  <div class="flex items-center gap-1.5 flex-wrap">
+                    <span class="font-mono text-xs font-black text-gold-700 dark:text-gold-400">${r.code}</span>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-black ${rt.pillClass}">${rt.label}</span>
+                    ${isRepeat ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-purple-500/20 text-purple-700 dark:text-purple-300">سرویس تکراری</span>` : ''}
+                  </div>
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black ${st.badgeClass}">${st.label}</span>
+                </div>
+
+                <div class="flex items-center justify-between gap-2">
+                  <div>
+                    <h4 class="text-sm sm:text-base font-black">${r.customerName}</h4>
+                    <span class="text-xs text-zinc-500" dir="ltr">${toPersianNum(r.customerPhone)}</span>
+                  </div>
+                  <div class="text-left">
+                    <strong class="text-sm font-black text-emerald-700 dark:text-emerald-400 block">${formatPrice(tot.total)} تومان</strong>
+                    <span class="text-[10px] text-zinc-400">${toPersianNum(r.date)}</span>
+                  </div>
+                </div>
+              </summary>
+
+              <div class="px-4 sm:px-5 pb-4 pt-3 border-t border-zinc-200/70 dark:border-zinc-800 bg-cream-100/50 dark:bg-zinc-900/50 space-y-2.5 text-xs">
+                <div>📍 <strong>نشانی:</strong> ${r.address}</div>
+                <div>📢 <strong>اعلام مشتری:</strong> ${r.customerFault}</div>
+                <div>🔬 <strong>تشخیص فنی (${r.techName}):</strong> ${r.techDiagnosis}</div>
+
+                <div class="p-2.5 rounded-2xl bg-white/80 dark:bg-zinc-950/60 border border-gold-500/20 space-y-1">
+                  <strong class="block text-gold-700 dark:text-gold-400">🔩 قطعات مصرفی:</strong>
+                  ${(r.parts || []).map(p => `
+                    <div class="flex justify-between text-[11px]">
+                      <span>${p.name} (×${toPersianNum(p.qty)}) • ${p.source === 'internal' ? 'انبار' : 'خارج'}</span>
+                      <strong>${formatPrice((Number(p.qty) || 0) * (Number(p.price) || 0))} تومان</strong>
+                    </div>
+                  `).join('')}
+                </div>
+
+                <div class="pt-1 flex flex-wrap items-center justify-between gap-2">
+                  <button type="button" data-open-case="${r.id}" class="px-3 py-1.5 rounded-xl bg-zinc-900 text-gold-400 font-black">📜 پرونده و کپی سریع</button>
+                  ${perms.canEditDel ? `
+                    <div class="flex items-center gap-1.5">
+                      <button type="button" data-edit-report="${r.id}" class="px-2.5 py-1.5 rounded-xl bg-blue-500/15 text-blue-600 dark:text-blue-400 font-black">✏️ ویرایش</button>
+                      <button type="button" data-delete-report="${r.id}" class="px-2.5 py-1.5 rounded-xl bg-rose-500/15 text-rose-600 font-black">🗑️ حذف</button>
+                    </div>
+                  ` : ''}
+                </div>
+              </div>
+            </details>
+          `;
+        }).join('');
+      }
+
+      function exportMahakCSV() {
+        const headers = ['کد', 'تاریخ', 'مشتری', 'تلفن', 'تکنسین', 'انبار (تومان)', 'خارج (تومان)', 'جمع کل (تومان)', 'وضعیت'];
+        const rows = state.reports.map(r => {
+          const tot = calcPartsTotals(r.parts);
+          return [r.code, r.date, r.customerName, r.customerPhone, r.techName, tot.internal, tot.external, tot.total, (STATUS_META[r.status]?.label || '')]
+            .map(v => `"${String(v).replace(/"/g, '""')}"`).join(',');
+        });
+        const csvContent = '\ufeff' + [headers.join(','), ...rows].join('\n');
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `MashhadGostar_Services_${toEnglishDigits(getSystemJalaliDate(0)).replace(/\//g, '-')}.csv`;
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1500);
+        showToast('فایل اکسل دانلود شد ✅');
+      }
+
+      /* ==========================================================
+         ۶. پرسنل و مجوزهای تیک‌خور (#view-staff)
+         ========================================================== */
+      function renderStaffPermissionsCheckboxes(permsObj) {
+        const box = document.getElementById('sem-permissions-grid');
+        if (!box) return;
+        box.innerHTML = PERMISSION_DEFS.map(pd => `
+          <label class="flex items-center gap-2 p-2 rounded-xl bg-white/80 dark:bg-zinc-950/60 border border-gold-500/20 cursor-pointer font-bold">
+            <input type="checkbox" data-perm-key="${pd.key}" ${permsObj[pd.key] ? 'checked' : ''} class="w-4 h-4 accent-emerald-600 rounded" />
+            <span>${pd.label}</span>
+          </label>
+        `).join('');
+      }
+
+      function renderStaffView() {
+        document.getElementById('st-cnt-all').textContent = toPersianNum(state.staff.length);
+        ['admin', 'supervisor', 'pro', 'amateur', 'apprentice'].forEach(rk => {
+          const el = document.getElementById(`st-cnt-${rk}`);
+          if (el) el.textContent = toPersianNum(state.staff.filter(s => s.role === rk).length);
+        });
+
+        document.querySelectorAll('#staff-role-filters .staff-role-btn').forEach(btn => {
+          const active = btn.getAttribute('data-staff-role') === state.staffFilters.role;
+          btn.classList.toggle('ring-2', active);
+          btn.classList.toggle('ring-gold-500', active);
+        });
+
+        const sf = state.staffFilters;
+        const list = state.staff.filter(s => {
+          if (sf.role !== 'all' && s.role !== sf.role) return false;
+          if (sf.search && !fuzzyMatch(`${s.name} ${s.username} ${s.phone || ''}`, sf.search)) return false;
+          return true;
+        });
+
+        const grid = document.getElementById('staff-cards-grid');
+        grid.innerHTML = list.map(s => {
+          const rm = ROLES_META[s.role] || ROLES_META.apprentice;
+          const activePermsCount = PERMISSION_DEFS.filter(pd => (s.perms || DEFAULT_PERMS_BY_ROLE[s.role])[pd.key]).length;
+          return `
+            <div class="glass-panel rounded-3xl p-4 sm:p-5 flex flex-col justify-between gap-3 border ${s.active ? 'border-gold-500/35' : 'border-rose-500/40 opacity-75'}">
+              <div class="flex items-start justify-between gap-2">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-11 h-11 rounded-full gold-gradient text-zinc-950 font-black text-sm flex items-center justify-center avatar-glow shrink-0" style="--tier-ring:${rm.ring}; --tier-glow:${rm.glow}">
+                    ${s.name.trim().charAt(0)}
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-black">${s.name}</h4>
+                    <span class="text-[11px] font-mono text-zinc-500" dir="ltr">@${s.username}</span>
+                  </div>
+                </div>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black ${rm.pillClass}">${rm.badge}</span>
+              </div>
+
+              <div class="flex items-center justify-between text-xs text-zinc-500 px-1">
+                <span dir="ltr">${toPersianNum(s.phone || '—')}</span>
+                <span class="font-bold text-emerald-600 dark:text-emerald-400">${toPersianNum(activePermsCount)} مجوز فعال</span>
+              </div>
+
+              <div class="pt-2.5 border-t border-zinc-200/70 dark:border-zinc-800 flex items-center justify-between gap-1.5 text-xs">
+                <span class="font-extrabold ${s.active ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600'}">${s.active ? '● فعال' : '○ غیرفعال'}</span>
+                <div class="flex items-center gap-1.5">
+                  <button type="button" data-edit-staff="${s.id}" class="px-3 py-1.5 rounded-xl bg-zinc-900 text-gold-400 font-black">✏️ ویرایش</button>
+                  ${s.username !== 'erfan' ? `<button type="button" data-delete-staff="${s.id}" class="px-2.5 py-1.5 rounded-xl bg-rose-500/15 text-rose-600 font-black">🗑️</button>` : ''}
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      /* ==========================================================
+         ۷. مودال جزئیات پرونده و تاریخچه مشتری
+         ========================================================== */
+      function openCaseDetailModal(reportId) {
+        const r = state.reports.find(x => x.id === reportId);
+        if (!r) return;
+        state.activeCaseId = r.id;
+
+        const perms = getEffectivePerms();
+        const st = STATUS_META[r.status] || STATUS_META.pending;
+        const rt = RATING_META[r.customerRating] || RATING_META.normal;
+        const tot = calcPartsTotals(r.parts);
+
+        document.getElementById('cd-code-badge').textContent = r.code;
+        document.getElementById('cd-customer-title').textContent = r.customerName;
+        const stBadge = document.getElementById('cd-status-badge');
+        stBadge.textContent = st.label;
+        stBadge.className = `px-2.5 py-0.5 rounded-full text-[10px] font-black ${st.badgeClass}`;
+
+        const canEditOrDel = perms.canEditDel || (r.techId === state.currentUser?.id && r.status !== 'approved');
+        document.getElementById('btn-cd-edit-record').classList.toggle('hidden', !canEditOrDel);
+        document.getElementById('btn-cd-delete-record').classList.toggle('hidden', !canEditOrDel);
+
+        document.getElementById('cd-panel-details').innerHTML = `
+          <div class="p-3.5 rounded-2xl bg-cream-100/90 dark:bg-zinc-900/90 border border-gold-500/30 space-y-1.5">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span>📞 <strong dir="ltr">${toPersianNum(r.customerPhone)}</strong></span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-black ${rt.pillClass}">${rt.label}</span>
+              <span>👨‍🔧 <strong>${r.techName}</strong></span>
+            </div>
+            <div>📍 <strong>${r.address}</strong></div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div class="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/30"><strong>📢 اعلام مشتری:</strong><p class="mt-1">${r.customerFault}</p></div>
+            <div class="p-3 rounded-2xl bg-indigo-500/10 border border-indigo-500/30"><strong>🔬 تشخیص تکنسین:</strong><p class="mt-1">${r.techDiagnosis}</p></div>
+          </div>
+
+          <div class="p-3.5 rounded-2xl bg-cream-100/90 dark:bg-zinc-900/90 border border-gold-500/35 space-y-2">
+            <div class="flex items-center justify-between">
+              <strong class="text-gold-700 dark:text-gold-400">🔩 قطعات مصرفی (تومان):</strong>
+              <button type="button" data-copy-mahak="${tot.total}" data-copy-label="جمع کل" class="px-2.5 py-1 rounded-lg bg-emerald-600 text-white text-[10px] font-black">📋 کپی جمع (${formatPrice(tot.total)})</button>
+            </div>
+            ${(r.parts || []).map(p => {
+              const sub = (Number(p.qty) || 0) * (Number(p.price) || 0);
+              return `
+                <div class="p-2 rounded-xl bg-white/85 dark:bg-zinc-950/70 border border-zinc-200/70 dark:border-zinc-800 flex flex-wrap items-center justify-between gap-2">
+                  <div>
+                    <strong>${p.name}</strong> (×${toPersianNum(p.qty)}) • ${p.source === 'internal' ? '🏢 انبار' : '🛒 خارج'}
+                    <div class="text-[11px] text-emerald-700 dark:text-emerald-400 font-black">${formatPrice(sub)} تومان</div>
+                  </div>
+                  <div class="flex gap-1">
+                    <button type="button" data-copy-mahak="${p.name}" data-copy-label="نام قطعه" class="px-2 py-1 rounded-lg bg-cream-200 dark:bg-zinc-800 text-[10px] font-black">کپی نام</button>
+                    <button type="button" data-copy-mahak="${sub}" data-copy-label="مبلغ" class="px-2 py-1 rounded-lg bg-gold-500/20 text-gold-700 dark:text-gold-300 text-[10px] font-black">کپی مبلغ</button>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        `;
+
+        document.getElementById('cd-panel-timeline').innerHTML = (r.timeline || []).map(ev => `
+          <div class="p-3 rounded-2xl bg-cream-100/90 dark:bg-zinc-900/90 border-r-4 border-gold-500 flex items-start justify-between gap-2">
+            <div><strong class="text-gold-700 dark:text-gold-400 block">${ev.actor}</strong><p class="mt-0.5">${ev.action}</p></div>
+            <span class="text-[10px] text-zinc-500 shrink-0">${ev.time}</span>
+          </div>
+        `).join('');
+
+        const actBox = document.getElementById('cd-supervisor-actions');
+        actBox.classList.toggle('hidden', !perms.canApprove);
+        document.getElementById('cd-delegate-box').classList.add('hidden');
+        document.getElementById('cd-reject-box').classList.add('hidden');
+
+        if (perms.canApprove) {
+          document.getElementById('cd-delegate-user').innerHTML = state.staff.filter(s => s.active).map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+        }
+
+        document.getElementById('cd-panel-details').classList.remove('hidden');
+        document.getElementById('cd-panel-timeline').classList.add('hidden');
+        openModal('case-detail-modal');
+      }
+
+      function loadReportIntoFormForEdit(repId) {
+        const rep = state.reports.find(r => r.id === repId);
+        if (!rep) return;
+        closeModal('case-detail-modal');
+        switchTab('service-form');
+        document.getElementById('sf-edit-report-id').value = rep.id;
+        document.getElementById('sf-customer-name').value = rep.customerName;
+        document.getElementById('sf-phone').value = rep.customerPhone;
+        document.getElementById('sf-address').value = rep.address;
+        document.getElementById('sf-customer-fault').value = rep.customerFault;
+        document.getElementById('sf-tech-diagnosis').value = rep.techDiagnosis;
+        document.getElementById('sf-tech-notes').value = rep.techNotes || '';
+        document.getElementById('sf-followup-date').value = rep.followUpDate || '';
+        setFormRating(rep.customerRating || 'normal');
+        setDeviceStatus(rep.deviceStatus || 'tested');
+        state.formParts = JSON.parse(JSON.stringify(rep.parts || []));
+        renderServiceFormView();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        showToast('گزارش جهت ویرایش بارگذاری شد', 'info');
+      }
+
+      function deleteReportById(repId) {
+        state.reports = state.reports.filter(r => r.id !== repId);
+        saveState();
+        closeModal('case-detail-modal');
+        applyRoleUI();
+        showToast('گزارش حذف شد', 'info');
+      }
+
+      function setFormRating(rk) {
+        document.getElementById('sf-rating-value').value = rk;
+        document.querySelectorAll('#sf-rating-pills .rating-pill-btn').forEach(btn => {
+          const isSel = btn.getAttribute('data-rating') === rk;
+          btn.className = isSel
+            ? 'rating-pill-btn py-2 px-2 rounded-xl border-2 text-[11px] font-black bg-amber-500/20 border-amber-500 text-amber-800 dark:text-amber-200'
+            : 'rating-pill-btn py-2 px-2 rounded-xl border text-[11px] font-black bg-white/70 dark:bg-zinc-900 border-zinc-300/80 dark:border-zinc-700';
+        });
+      }
+
+      function setDeviceStatus(stVal) {
+        document.getElementById('sf-device-status-val').value = stVal;
+        document.getElementById('sf-followup-date-box').classList.toggle('hidden', stVal !== 'followup');
+        document.querySelectorAll('#sf-device-status-cards .dev-status-btn').forEach(btn => {
+          const active = btn.getAttribute('data-dev-status') === stVal;
+          btn.className = active
+            ? (stVal === 'tested'
+                ? 'dev-status-btn p-3 rounded-2xl border-2 border-emerald-500 bg-emerald-500/15 text-right flex items-center gap-2'
+                : 'dev-status-btn p-3 rounded-2xl border-2 border-amber-500 bg-amber-500/15 text-right flex items-center gap-2')
+            : 'dev-status-btn p-3 rounded-2xl border border-zinc-300/80 dark:border-zinc-700 bg-white/70 dark:bg-zinc-900 text-right flex items-center gap-2';
+        });
+      }
+
+      /* ==========================================================
+         ۸. سرچ سراسری کم‌حساسیت
+         ========================================================== */
+      function initGlobalSearch() {
+        const inp = document.getElementById('v5-global-search');
+        const drop = document.getElementById('v5-global-search-dropdown');
+        const clearBtn = document.getElementById('btn-clear-global-search');
+
+        function runSearch() {
+          const q = inp.value.trim();
+          clearBtn.classList.toggle('hidden', !q);
+          if (!q) { drop.classList.add('hidden'); return; }
+
+          const matched = getVisibleReports().filter(r => {
+            const partsStr = (r.parts || []).map(p => p.name).join(' ');
+            return fuzzyMatch(`${r.code} ${r.customerName} ${r.customerPhone} ${r.address} ${r.techName} ${partsStr}`, q);
+          }).slice(0, 6);
+
+          drop.innerHTML = matched.length === 0
+            ? `<div class="p-3 text-center text-xs font-bold text-zinc-500">نتیجه‌ای یافت نشد.</div>`
+            : matched.map(r => {
+                const st = STATUS_META[r.status] || STATUS_META.pending;
+                return `
+                  <button type="button" data-open-case="${r.id}" class="w-full text-right p-2 rounded-xl hover:bg-gold-500/20 flex items-center justify-between gap-2 text-xs">
+                    <div>
+                      <span class="font-mono font-black text-gold-700 dark:text-gold-400 ml-1">${r.code}</span>
+                      <strong class="font-black">${r.customerName}</strong>
+                    </div>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-black ${st.badgeClass}">${st.label}</span>
+                  </button>
+                `;
+              }).join('');
+          drop.classList.remove('hidden');
+        }
+
+        inp.addEventListener('input', runSearch);
+        inp.addEventListener('focus', () => { if (inp.value.trim()) runSearch(); });
+        clearBtn.addEventListener('click', () => { inp.value = ''; clearBtn.classList.add('hidden'); drop.classList.add('hidden'); });
+        document.addEventListener('click', e => {
+          if (!e.target.closest('#v5-global-search') && !e.target.closest('#v5-global-search-dropdown')) drop.classList.add('hidden');
+        });
+      }
+
+      /* ==========================================================
+         ۹. اتصال تمام رویدادها
+         ========================================================== */
+      function initEvents() {
+        loadState();
+        initGlobalSearch();
+        setInterval(updateLiveTickerAndClock, 1000);
+        updateLiveTickerAndClock();
+
+        /* سوییچ ورود فروش / خدمات */
+        const btnSales = document.getElementById('btn-portal-sales');
+        const btnService = document.getElementById('btn-portal-service');
+        function setLoginPortal(mode) {
+          const isSales = mode === 'sales';
+          btnSales.className = isSales ? 'py-2 px-3 rounded-xl text-xs font-black gold-gradient text-zinc-950 shadow-sm' : 'py-2 px-3 rounded-xl text-xs font-bold text-zinc-600 dark:text-zinc-300';
+          btnService.className = !isSales ? 'py-2 px-3 rounded-xl text-xs font-black gold-gradient text-zinc-950 shadow-sm' : 'py-2 px-3 rounded-xl text-xs font-bold text-zinc-600 dark:text-zinc-300';
+          document.getElementById('portal-sales-notice').classList.toggle('hidden', !isSales);
+          document.getElementById('portal-service-form-wrap').classList.toggle('hidden', isSales);
+        }
+        btnSales.addEventListener('click', () => setLoginPortal('sales'));
+        btnService.addEventListener('click', () => setLoginPortal('service'));
+        document.getElementById('btn-switch-back-service').addEventListener('click', () => setLoginPortal('service'));
+
+        function performLogin(username, password) {
+          const errBox = document.getElementById('login-error-box');
+          const user = state.staff.find(s => s.username.toLowerCase() === username.toLowerCase() && s.password === password);
+          if (!user || !user.active) {
+            errBox.textContent = !user ? 'نام کاربری یا رمز عبور اشتباه است.' : 'حساب غیرفعال است.';
+            errBox.classList.remove('hidden');
+            return;
+          }
+          errBox.classList.add('hidden');
+          state.currentUser = user;
+          state.effectiveRole = user.role;
+          document.getElementById('auth-login-modal').classList.add('hidden');
+          document.getElementById('auth-login-modal').classList.remove('flex');
+          applyRoleUI();
+          showToast(`خوش آمدید ${user.name}`);
+        }
+
+        document.getElementById('auth-login-form').addEventListener('submit', e => {
+          e.preventDefault();
+          performLogin(document.getElementById('login-username').value.trim(), document.getElementById('login-password').value.trim());
+        });
+        document.querySelectorAll('[data-quick-login]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const u = btn.getAttribute('data-quick-login');
+            document.getElementById('login-username').value = u;
+            document.getElementById('login-password').value = '1234';
+            performLogin(u, '1234');
+          });
+        });
+
+        document.getElementById('btn-logout-user').addEventListener('click', () => {
+          state.currentUser = null; state.effectiveRole = null;
+          document.getElementById('top-user-menu').open = false;
+          const lm = document.getElementById('auth-login-modal');
+          lm.classList.remove('hidden'); lm.classList.add('flex');
+        });
+
+        document.getElementById('btn-toggle-theme').addEventListener('click', () => {
+          document.documentElement.classList.toggle('dark');
+          document.getElementById('btn-toggle-theme').setAttribute('aria-checked', String(document.documentElement.classList.contains('dark')));
+        });
+
+        document.getElementById('select-preview-role').addEventListener('change', e => {
+          if (state.currentUser?.role !== 'admin') return;
+          state.effectiveRole = e.target.value;
+          closeModal('mg-profile-overlay');
+          applyRoleUI();
+        });
+        document.getElementById('btn-exit-role-preview').addEventListener('click', () => {
+          if (state.currentUser?.role !== 'admin') return;
+          state.effectiveRole = 'admin';
+          applyRoleUI();
+        });
+
+        /* باز کردن پنجره پروفایل من (#mg-profile-overlay) */
+        function openMyProfileModal() {
+          const u = state.currentUser; if (!u) return;
+          document.getElementById('top-user-menu').open = false;
+          const rm = ROLES_META[u.role] || ROLES_META.apprentice;
+          const avEl = document.getElementById('mp-avatar-circle');
+          avEl.style.setProperty('--tier-ring', rm.ring);
+          avEl.style.setProperty('--tier-glow', rm.glow);
+
+          const imgEl = document.getElementById('mg-profile-image');
+          const initEl = document.getElementById('mg-profile-initial');
+          const rmPhotoBtn = document.getElementById('btn-remove-profile-photo');
+          if (u.avatar) {
+            imgEl.src = u.avatar;
+            imgEl.classList.remove('hidden');
+            initEl.classList.add('hidden');
+            rmPhotoBtn.classList.remove('hidden');
+          } else {
+            imgEl.classList.add('hidden');
+            initEl.classList.remove('hidden');
+            initEl.textContent = u.name.trim().charAt(0);
+            rmPhotoBtn.classList.add('hidden');
+          }
+
+          document.getElementById('mp-name').textContent = u.name;
+          document.getElementById('mp-username-input').value = u.username;
+          document.getElementById('mp-status-select').value = u.status || 'آنلاین';
+          document.getElementById('mp-bio-input').value = u.bio || '';
+          document.getElementById('mp-edit-phone').value = u.phone || '';
+
+          const adminRoleBox = document.getElementById('mp-admin-only-role');
+          if (u.role === 'admin') {
+            adminRoleBox.classList.remove('hidden');
+            document.getElementById('mp-role-pill').textContent = rm.label;
+          } else {
+            adminRoleBox.classList.add('hidden');
+          }
+
+          document.getElementById('mg-profile-form').reset();
+          openModal('mg-profile-overlay');
+        }
+
+        document.getElementById('mg-profile-open').addEventListener('click', openMyProfileModal);
+        document.getElementById('btn-notify-settings').addEventListener('click', openMyProfileModal);
+        document.getElementById('notif-toggle-btn').addEventListener('click', async () => {
+          if (!('Notification' in window)) { alert('اعلان‌های مرورگر در این دستگاه پشتیبانی نمی‌شود.'); return; }
+          if (Notification.permission === 'default') {
+            const permission = await Notification.requestPermission();
+            if (permission === 'granted') new Notification('اعلان‌ها فعال است');
+          } else if (Notification.permission === 'granted') {
+            new Notification('اعلان‌ها فعال است');
+          } else if (Notification.permission === 'denied') {
+            alert('اجازهٔ اعلان‌ها مسدود شده است. تنظیمات مرورگر را بررسی کنید.');
+          }
+        });
+        document.getElementById('btn-n8n-sync-now').addEventListener('click', () => {
+          document.getElementById('top-user-menu').open = false;
+          switchTab('staff');
+        });
+
+        /* آپلود و حذف عکس پروفایل */
+        document.getElementById('mg-profile-photo').addEventListener('change', e => {
+          const file = e.target.files?.[0];
+          if (!file || !state.currentUser) return;
+          if (!file.type.startsWith('image/') || file.size > 3 * 1024 * 1024) {
+            showToast('فایل باید تصویر و کمتر از ۳ مگابایت باشد', 'error');
+            e.target.value = '';
+            return;
+          }
+          const reader = new FileReader();
+          reader.onload = () => {
+            state.currentUser.avatar = reader.result;
+            saveState();
+            applyRoleUI();
+            openMyProfileModal();
+            showToast('عکس پروفایل ذخیره شد ✅');
+          };
+          reader.readAsDataURL(file);
+        });
+
+        document.getElementById('btn-remove-profile-photo').addEventListener('click', () => {
+          if (!state.currentUser) return;
+          state.currentUser.avatar = '';
+          saveState();
+          applyRoleUI();
+          openMyProfileModal();
+          showToast('عکس پروفایل حذف شد', 'info');
+        });
+
+        /* ذخیره مشخصات پروفایل (وضعیت، بیو، داخلی یا شماره تماس) */
+        document.getElementById('mg-profile-info').addEventListener('submit', e => {
+          e.preventDefault();
+          const u = state.currentUser; if (!u) return;
+          u.status = document.getElementById('mp-status-select').value;
+          u.bio = document.getElementById('mp-bio-input').value.trim();
+          u.phone = document.getElementById('mp-edit-phone').value.trim();
+          saveState();
+          applyRoleUI();
+          showToast('پروفایل با موفقیت ذخیره شد ✅');
+        });
+
+        /* تغییر رمز عبور در پروفایل */
+        document.getElementById('mg-profile-form').addEventListener('submit', e => {
+          e.preventDefault();
+          const u = state.currentUser; if (!u) return;
+          const oldP = document.getElementById('mp-old-pass').value.trim();
+          const newP = document.getElementById('mp-new-pass').value.trim();
+          const confP = document.getElementById('mp-confirm-pass').value.trim();
+          if (oldP !== u.password) { showToast('رمز فعلی اشتباه است', 'error'); return; }
+          if (newP.length < 4) { showToast('رمز جدید باید حداقل ۴ کاراکتر باشد', 'error'); return; }
+          if (newP !== confP) { showToast('تکرار رمز جدید مطابقت ندارد', 'error'); return; }
+          u.password = newP;
+          saveState();
+          document.getElementById('mg-profile-form').reset();
+          showToast('رمز جدید ذخیره شد 🔑');
+        });
+
+        document.getElementById('btn-top-excel').addEventListener('click', () => { document.getElementById('top-user-menu').open = false; exportMahakCSV(); });
+        document.getElementById('btn-archive-export-csv').addEventListener('click', exportMahakCSV);
+
+        /* بستن منوی هدر با کلیک بیرون یا کلید ESC */
+        const topMenuEl = document.getElementById('top-user-menu');
+        document.addEventListener('click', e => {
+          if (topMenuEl && !topMenuEl.contains(e.target)) topMenuEl.open = false;
+        });
+        document.addEventListener('keydown', e => {
+          if (e.key === 'Escape') {
+            if (topMenuEl) topMenuEl.open = false;
+            closeModal('mg-profile-overlay');
+          }
+        });
+
+        window.addEventListener('resize', () => {
+          const act = document.querySelector('#dynamic-module-nav .nav-tab-btn.is-active');
+          if (act) animateSlidingPill(act, true);
+        });
+
+        /* ناوبری و دکمه‌های عمومی */
+        document.addEventListener('click', e => {
+          const navBtn = e.target.closest('#dynamic-module-nav .nav-tab-btn');
+          if (navBtn) { e.preventDefault(); switchTab(navBtn.getAttribute('data-tab')); return; }
+
+          const gotoBtn = e.target.closest('[data-goto-tab]');
+          if (gotoBtn) {
+            if (gotoBtn.getAttribute('data-ws-preset') === 'followup') state.wsFilters.followupOnly = true;
+            switchTab(gotoBtn.getAttribute('data-goto-tab')); return;
+          }
+
+          const closeBtn = e.target.closest('[data-close-modal]');
+          if (closeBtn) { closeModal(closeBtn.getAttribute('data-close-modal')); return; }
+
+          const openCaseBtn = e.target.closest('[data-open-case]');
+          if (openCaseBtn) {
+            document.getElementById('v5-global-search-dropdown').classList.add('hidden');
+            openCaseDetailModal(openCaseBtn.getAttribute('data-open-case')); return;
+          }
+
+          const editRepBtn = e.target.closest('[data-edit-report]');
+          if (editRepBtn) { loadReportIntoFormForEdit(editRepBtn.getAttribute('data-edit-report')); return; }
+
+          const delRepBtn = e.target.closest('[data-delete-report]');
+          if (delRepBtn) { deleteReportById(delRepBtn.getAttribute('data-delete-report')); return; }
+
+          const copyBtn = e.target.closest('[data-copy-mahak]');
+          if (copyBtn) { copyToClipboard(copyBtn.getAttribute('data-copy-mahak'), `${copyBtn.getAttribute('data-copy-label')} کپی شد!`); return; }
+        });
+
+        /* ناوبری تب‌ها با حرکت افقی انگشت در موبایل */
+        const tabSwipeTarget = document.getElementById('dynamic-module-nav');
+        if (tabSwipeTarget) {
+          let touchStartX = null;
+          tabSwipeTarget.addEventListener('touchstart', e => {
+            if (e.touches.length === 1) touchStartX = e.touches[0].clientX;
+          }, { passive: true });
+          tabSwipeTarget.addEventListener('touchend', e => {
+            if (touchStartX === null || !e.changedTouches.length) return;
+            const delta = e.changedTouches[0].clientX - touchStartX;
+            touchStartX = null;
+            if (Math.abs(delta) <= 50) return;
+            const tabs = Array.from(tabSwipeTarget.querySelectorAll('.nav-tab-btn'));
+            const current = tabs.findIndex(btn => btn.getAttribute('data-tab') === state.activeTab);
+            const nextIndex = Math.max(0, Math.min(tabs.length - 1, current + (delta > 50 ? 1 : -1)));
+            if (tabs[nextIndex] && nextIndex !== current) switchTab(tabs[nextIndex].getAttribute('data-tab'));
+          }, { passive: true });
+        }
+
+        /* حدس هوشمند نام مشتری + پر کردن خودکار مشخصات + دکمه بایگانی */
+        const nameInp = document.getElementById('sf-customer-name');
+        const sugBox = document.getElementById('sf-customer-suggestions');
+
+        function showCustomerSuggestions() {
+          const q = nameInp.value.trim();
+          if (!q) { sugBox.classList.add('hidden'); return; }
+
+          const uniqueMap = new Map();
+          state.reports.forEach(r => {
+            const key = toEnglishDigits(r.customerPhone).replace(/\D/g, '') || r.customerName;
+            if (!uniqueMap.has(key)) uniqueMap.set(key, r);
+          });
+
+          const matches = Array.from(uniqueMap.values()).filter(r =>
+            fuzzyMatch(`${r.customerName} ${r.customerPhone} ${r.address}`, q)
+          ).slice(0, 5);
+
+          if (matches.length === 0) { sugBox.classList.add('hidden'); return; }
+
+          sugBox.innerHTML = matches.map(m => `
+            <button type="button" data-pick-cust="${m.id}" class="w-full text-right p-2 rounded-xl hover:bg-gold-500/20 flex items-center justify-between gap-2 text-xs">
+              <div>
+                <strong class="font-black block">${m.customerName}</strong>
+                <span class="text-[10px] text-zinc-500">${m.address}</span>
+              </div>
+              <span class="text-[10px] font-mono font-bold text-gold-700 dark:text-gold-400 shrink-0" dir="ltr">${toPersianNum(m.customerPhone)}</span>
+            </button>
+          `).join('');
+          sugBox.classList.remove('hidden');
+        }
+
+        nameInp.addEventListener('input', showCustomerSuggestions);
+        nameInp.addEventListener('focus', showCustomerSuggestions);
+
+        sugBox.addEventListener('click', e => {
+          const btn = e.target.closest('[data-pick-cust]');
+          if (!btn) return;
+          const rep = state.reports.find(r => r.id === btn.getAttribute('data-pick-cust'));
+          if (!rep) return;
+          nameInp.value = rep.customerName;
+          document.getElementById('sf-phone').value = rep.customerPhone;
+          document.getElementById('sf-address').value = rep.address;
+          setFormRating(rep.customerRating || 'normal');
+          document.getElementById('sf-autofill-badge').classList.remove('hidden');
+          sugBox.classList.add('hidden');
+        });
+
+        document.addEventListener('click', e => {
+          if (!e.target.closest('#sf-customer-name') && !e.target.closest('#sf-customer-suggestions')) {
+            sugBox.classList.add('hidden');
+          }
+        });
+
+        /* دکمه بایگانی کنار نام مشتری */
+        document.getElementById('btn-open-cust-archive-quick').addEventListener('click', () => {
+          const qName = nameInp.value.trim();
+          const qPhone = toEnglishDigits(document.getElementById('sf-phone').value).replace(/\D/g, '');
+          const matches = state.reports.filter(r => {
+            if (qPhone && toEnglishDigits(r.customerPhone).replace(/\D/g, '').includes(qPhone)) return true;
+            if (qName && fuzzyMatch(r.customerName, qName)) return true;
+            return !qName && !qPhone;
+          });
+
+          document.getElementById('chm-title').textContent = qName ? `📂 سوابق ${qName}` : '📂 سوابق اخیر مشتریان';
+          const chmList = document.getElementById('chm-list');
+          chmList.innerHTML = matches.length === 0
+            ? `<p class="text-center text-zinc-500 font-bold py-4">سابقه‌ای برای این مشتری ثبت نشده است.</p>`
+            : matches.map(r => {
+                const tot = calcPartsTotals(r.parts);
+                return `
+                  <div class="p-3 rounded-2xl bg-cream-100 dark:bg-zinc-900 border border-gold-500/30 space-y-1.5">
+                    <div class="flex items-center justify-between">
+                      <div>
+                        <span class="font-mono font-black text-gold-700 dark:text-gold-400 ml-1">${r.code}</span>
+                        <strong>${r.customerName}</strong>
+                      </div>
+                      <span class="text-[11px] text-zinc-500">${toPersianNum(r.date)}</span>
+                    </div>
+                    <p class="text-zinc-600 dark:text-zinc-300"><strong>تشخیص:</strong> ${r.techDiagnosis}</p>
+                    <div class="flex items-center justify-between pt-1">
+                      <strong class="text-emerald-700 dark:text-emerald-400">${formatPrice(tot.total)} تومان</strong>
+                      <button type="button" data-open-case="${r.id}" class="px-2.5 py-1 rounded-lg bg-zinc-900 text-gold-400 text-[10px] font-black">مشاهده کامل</button>
+                    </div>
+                  </div>
+                `;
+              }).join('');
+          openModal('customer-history-modal');
+        });
+
+        document.getElementById('sf-rating-pills').addEventListener('click', e => {
+          const btn = e.target.closest('.rating-pill-btn');
+          if (btn) setFormRating(btn.getAttribute('data-rating'));
+        });
+        document.getElementById('sf-device-status-cards').addEventListener('click', e => {
+          const btn = e.target.closest('.dev-status-btn');
+          if (btn) setDeviceStatus(btn.getAttribute('data-dev-status'));
+        });
+        document.getElementById('sf-quick-tech-chips').addEventListener('click', e => {
+          const btn = e.target.closest('[data-chip]');
+          if (!btn) return;
+          const ta = document.getElementById('sf-tech-notes');
+          const chip = btn.getAttribute('data-chip');
+          ta.value = ta.value.trim() ? `${ta.value.trim()} | ${chip}` : chip;
+        });
+
+        /* جدول قطعات — تایپ روان مبلغ بدون بازسازی DOM */
+        document.getElementById('btn-add-part-row').addEventListener('click', () => {
+          state.formParts.push({ name: '', qty: 1, price: 0, itemCode: '', source: 'internal', hasInvoice: false });
+          renderFormPartsRows();
+        });
+
+        document.getElementById('sf-parts-list').addEventListener('input', e => {
+          const idx = parseInt(e.target.getAttribute('data-part-idx'), 10);
+          const field = e.target.getAttribute('data-part-field');
+          if (isNaN(idx) || !state.formParts[idx]) return;
+
+          if (field === 'name') {
+            state.formParts[idx].name = e.target.value;
+            return;
+          }
+          if (field === 'itemCode') {
+            state.formParts[idx].itemCode = e.target.value;
+            return;
+          }
+          if (field === 'qty') {
+            state.formParts[idx].qty = Math.max(1, parseInt(e.target.value, 10) || 1);
+            const rowSum = state.formParts[idx].qty * (Number(state.formParts[idx].price) || 0);
+            const rowTotEl = document.querySelector(`[data-part-row-total="${idx}"]`);
+            if (rowTotEl) rowTotEl.textContent = `${formatPrice(rowSum)} تومان`;
+            updateFormPartsTotalsUI();
+            return;
+          }
+          if (field === 'price') {
+            const rawDigits = toEnglishDigits(e.target.value).replace(/[^\d]/g, '');
+            const num = parseInt(rawDigits, 10) || 0;
+            state.formParts[idx].price = num;
+            e.target.value = num > 0 ? formatThousandsEn(num) : '';
+            const rowSum = (Number(state.formParts[idx].qty) || 1) * num;
+            const rowTotEl = document.querySelector(`[data-part-row-total="${idx}"]`);
+            if (rowTotEl) rowTotEl.textContent = `${formatPrice(rowSum)} تومان`;
+            updateFormPartsTotalsUI();
+          }
+        });
+
+        document.getElementById('sf-parts-list').addEventListener('change', e => {
+          const idx = parseInt(e.target.getAttribute('data-part-idx'), 10);
+          if (!isNaN(idx) && e.target.getAttribute('data-part-field') === 'hasInvoice' && state.formParts[idx]) {
+            state.formParts[idx].hasInvoice = e.target.checked;
+          }
+        });
+
+        document.getElementById('sf-parts-list').addEventListener('click', e => {
+          const stepBtn = e.target.closest('[data-part-qty-step]');
+          if (stepBtn) {
+            const [idxStr, deltaStr] = stepBtn.getAttribute('data-part-qty-step').split(':');
+            const idx = parseInt(idxStr, 10);
+            state.formParts[idx].qty = Math.max(1, (Number(state.formParts[idx].qty) || 1) + parseInt(deltaStr, 10));
+            renderFormPartsRows(); return;
+          }
+          const srcBtn = e.target.closest('[data-part-src]');
+          if (srcBtn) {
+            const [idxStr, srcVal] = srcBtn.getAttribute('data-part-src').split(':');
+            const idx = parseInt(idxStr, 10);
+            state.formParts[idx].source = srcVal;
+            if (srcVal === 'internal') state.formParts[idx].hasInvoice = false;
+            renderFormPartsRows(); return;
+          }
+          const delBtn = e.target.closest('[data-part-del]');
+          if (delBtn) {
+            state.formParts.splice(parseInt(delBtn.getAttribute('data-part-del'), 10), 1);
+            renderFormPartsRows();
+          }
+        });
+
+        document.getElementById('btn-add-labor-row').addEventListener('click', () => addLaborRow());
+        document.getElementById('sf-labor-rows').addEventListener('input', calcBillingTotals);
+        document.getElementById('sf-labor-rows').addEventListener('click', e => {
+          const removeBtn = e.target.closest('[data-remove-labor-row]');
+          if (removeBtn) { removeBtn.closest('.grid').remove(); calcBillingTotals(); }
+        });
+        document.getElementById('sf-discount').addEventListener('input', calcBillingTotals);
+        addLaborRow();
+
+        /* بازبینی و ثبت گزارش به میز کار */
+        document.getElementById('service-report-form').addEventListener('submit', e => {
+          e.preventDefault();
+          const phone = document.getElementById('sf-phone').value.trim();
+          const custName = document.getElementById('sf-customer-name').value.trim();
+          const address = document.getElementById('sf-address').value.trim();
+          const fault = document.getElementById('sf-customer-fault').value.trim();
+          const diag = document.getElementById('sf-tech-diagnosis').value.trim();
+
+          if (!phone || !custName || !address || !fault || !diag) {
+            showToast('فیلدهای ستاره‌دار را تکمیل کنید', 'error'); return;
+          }
+          const validParts = state.formParts.filter(p => p.name.trim() !== '');
+          if (validParts.length === 0) {
+            showToast('حداقل یک قطعه وارد کنید', 'error'); return;
+          }
+
+          const rating = document.getElementById('sf-rating-value').value;
+          const devStatus = document.getElementById('sf-device-status-val').value;
+          const followDate = document.getElementById('sf-followup-date').value.trim();
+          const notes = document.getElementById('sf-tech-notes').value.trim();
+          const tot = calcPartsTotals(validParts);
+
+          state.pendingReportDraft = {
+            editId: document.getElementById('sf-edit-report-id').value,
+            customerName: custName, customerPhone: phone, customerRating: rating,
+            address, customerFault: fault, techDiagnosis: diag,
+            parts: JSON.parse(JSON.stringify(validParts)),
+            techNotes: notes, deviceStatus: devStatus,
+            followUpDate: devStatus === 'followup' ? followDate : ''
+          };
+
+          document.getElementById('review-modal-content').innerHTML = `
+            <div class="p-3 rounded-2xl bg-cream-100 dark:bg-zinc-900 border border-gold-500/30">
+              <strong class="text-sm font-black block">${custName} (<span dir="ltr">${toPersianNum(phone)}</span>)</strong>
+              <span class="text-zinc-500">${address}</span>
+            </div>
+            <div class="p-3 rounded-2xl bg-cream-100 dark:bg-zinc-900 border border-gold-500/30 space-y-1">
+              ${validParts.map(p => `
+                <div class="flex justify-between">
+                  <span>${p.name} (×${toPersianNum(p.qty)})</span>
+                  <strong>${formatPrice((Number(p.qty) || 0) * (Number(p.price) || 0))} تومان</strong>
+                </div>
+              `).join('')}
+              <div class="pt-1.5 border-t border-zinc-200 dark:border-zinc-800 flex justify-between font-black text-emerald-700 dark:text-emerald-400">
+                <span>جمع کل:</span><span>${formatPrice(tot.total)} تومان</span>
+              </div>
+            </div>
+          `;
+          openModal('report-review-modal');
+        });
+
+        document.getElementById('btn-confirm-send-report').addEventListener('click', () => {
+          const draft = state.pendingReportDraft;
+          if (!draft || !state.currentUser) return;
+          const supervisor = state.staff.find(s => s.role === 'supervisor' && s.active) || state.staff[0];
+
+          if (draft.editId) {
+            const rep = state.reports.find(r => r.id === draft.editId);
+            if (rep) {
+              Object.assign(rep, {
+                customerName: draft.customerName, customerPhone: draft.customerPhone,
+                customerRating: draft.customerRating, address: draft.address,
+                customerFault: draft.customerFault, techDiagnosis: draft.techDiagnosis,
+                parts: draft.parts, techNotes: draft.techNotes,
+                deviceStatus: draft.deviceStatus, followUpDate: draft.followUpDate,
+                status: 'pending', rejectReason: ''
+              });
+              rep.timeline.unshift({ time: getSystemTimestamp(), actor: state.currentUser.name, action: 'ویرایش و ارسال مجدد به میز کار' });
+            }
+            showToast('گزارش ویرایش شد ✅');
+          } else {
+            const newCode = `SRV-${101 + state.reports.length}`;
+            state.reports.unshift({
+              id: 'rep-' + Date.now(), code: newCode,
+              date: getSystemJalaliDate(0), time: getSystemTimeStr(),
+              customerName: draft.customerName, customerPhone: draft.customerPhone,
+              customerRating: draft.customerRating, address: draft.address,
+              customerFault: draft.customerFault, techDiagnosis: draft.techDiagnosis,
+              parts: draft.parts, techNotes: draft.techNotes,
+              deviceStatus: draft.deviceStatus, followUpDate: draft.followUpDate,
+              status: 'pending', techId: state.currentUser.id, techName: state.currentUser.name,
+              assigneeId: supervisor.id, assigneeName: supervisor.name, rejectReason: '',
+              timeline: [{ time: getSystemTimestamp(), actor: state.currentUser.name, action: 'ثبت گزارش کار' }]
+            });
+            showToast(`گزارش ${newCode} در میز کار ثبت شد ✅`);
+          }
+
+          saveState();
+          resetServiceFormFields();
+          closeModal('report-review-modal');
+          state.activeTab = 'workspace';
+          state.wsActivePane = 'reports';
+          applyRoleUI();
+        });
+
+        function resetServiceFormFields() {
+          document.getElementById('service-report-form').reset();
+          document.getElementById('sf-edit-report-id').value = '';
+          document.getElementById('sf-autofill-badge').classList.add('hidden');
+          setFormRating('normal'); setDeviceStatus('tested');
+          state.formParts = [{ name: '', qty: 1, price: 0, source: 'internal', hasInvoice: false }];
+          renderServiceFormView();
+        }
+        document.getElementById('btn-reset-service-form').addEventListener('click', resetServiceFormFields);
+
+        /* رویدادهای میز کار */
+        document.querySelectorAll('.ws-pane-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            state.wsActivePane = btn.getAttribute('data-ws-pane');
+            renderWorkspaceView();
+          });
+        });
+        document.getElementById('btn-ws-toggle-filters').addEventListener('click', () => {
+          document.getElementById('ws-filters-drawer').classList.toggle('hidden');
+        });
+        document.getElementById('btn-ws-new-checklist').addEventListener('click', () => {
+          document.getElementById('cl-title').focus();
+        });
+
+        document.getElementById('ws-status-tabs').addEventListener('click', e => {
+          if (e.target.closest('#ws-mine-btn')) { state.wsFilters.mine = !state.wsFilters.mine; renderWorkspaceReports(); return; }
+          const btn = e.target.closest('[data-ws-status]');
+          if (btn) { state.wsFilters.status = btn.getAttribute('data-ws-status'); renderWorkspaceReports(); }
+        });
+        document.getElementById('ws-filter-search').addEventListener('input', e => { state.wsFilters.search = e.target.value; renderWorkspaceReports(); });
+        document.getElementById('ws-filter-staff').addEventListener('change', e => { state.wsFilters.staff = e.target.value; renderWorkspaceReports(); });
+        document.getElementById('ws-filter-rating').addEventListener('change', e => { state.wsFilters.rating = e.target.value; renderWorkspaceReports(); });
+        document.getElementById('ws-filter-date').addEventListener('change', e => { state.wsFilters.date = e.target.value; renderWorkspaceReports(); });
+        document.getElementById('ws-filter-followup-only').addEventListener('change', e => { state.wsFilters.followupOnly = e.target.checked; renderWorkspaceReports(); });
+        document.getElementById('btn-ws-reset-filters').addEventListener('click', () => {
+          state.wsFilters = { status: 'all', search: '', staff: 'all', rating: 'all', date: 'all', followupOnly: false, mine: false };
+          document.getElementById('ws-filter-search').value = '';
+          document.getElementById('ws-filter-rating').value = 'all';
+          document.getElementById('ws-filter-date').value = 'all';
+          document.getElementById('ws-filter-followup-only').checked = false;
+          renderWorkspaceReports();
+        });
+
+        document.getElementById('workspace-checklist-container').addEventListener('click', e => {
+          const appBtn = e.target.closest('[data-quick-approve]');
+          if (appBtn) approveReportById(appBtn.getAttribute('data-quick-approve'));
+        });
+
+        /* فرم ساخت و ویرایش چک‌لیست در میز کار */
+        document.getElementById('ws-checklist-form').addEventListener('submit', e => {
+          e.preventDefault();
+          const title = document.getElementById('cl-title').value.trim();
+          const assigneeId = document.getElementById('cl-assignee').value;
+          const lines = document.getElementById('cl-items-text').value.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+          if (!title || lines.length === 0) { showToast('عنوان و حداقل یک مورد بنویسید', 'error'); return; }
+
+          const assigneeUser = state.staff.find(s => s.id === assigneeId) || state.currentUser;
+          const editId = document.getElementById('cl-edit-id').value;
+
+          if (editId) {
+            const cl = state.checklists.find(c => c.id === editId);
+            if (cl) {
+              cl.title = title;
+              cl.assigneeId = assigneeUser.id;
+              cl.assigneeName = assigneeUser.name;
+              cl.items = lines.map((txt, idx) => ({ text: txt, done: cl.items[idx]?.text === txt ? cl.items[idx].done : false }));
+            }
+            showToast('چک‌لیست ویرایش شد ✅');
+          } else {
+            state.checklists.unshift({
+              id: 'cl-' + Date.now(),
+              title,
+              creatorId: state.currentUser.id,
+              creatorName: state.currentUser.name,
+              assigneeId: assigneeUser.id,
+              assigneeName: assigneeUser.name,
+              date: getSystemJalaliDate(0),
+              items: lines.map(text => ({ text, done: false }))
+            });
+            showToast('چک‌لیست ثبت شد ✅');
+          }
+
+          document.getElementById('cl-edit-id').value = '';
+          document.getElementById('ws-checklist-form').reset();
+          document.getElementById('btn-cl-submit').textContent = '+ ثبت و ارسال چک‌لیست';
+          document.getElementById('btn-cl-cancel-edit').classList.add('hidden');
+          saveState();
+          renderWorkspaceView();
+        });
+
+        document.getElementById('btn-cl-cancel-edit').addEventListener('click', () => {
+          document.getElementById('cl-edit-id').value = '';
+          document.getElementById('ws-checklist-form').reset();
+          document.getElementById('btn-cl-submit').textContent = '+ ثبت و ارسال چک‌لیست';
+          document.getElementById('btn-cl-cancel-edit').classList.add('hidden');
+        });
+
+        document.getElementById('ws-checklists-grid').addEventListener('change', e => {
+          const chk = e.target.closest('[data-cl-toggle]');
+          if (!chk) return;
+          const [clId, idxStr] = chk.getAttribute('data-cl-toggle').split(':');
+          const cl = state.checklists.find(c => c.id === clId);
+          if (cl && cl.items[Number(idxStr)]) {
+            cl.items[Number(idxStr)].done = chk.checked;
+            saveState();
+            renderWorkspaceChecklists();
+          }
+        });
+
+        document.getElementById('ws-checklists-grid').addEventListener('click', e => {
+          const editBtn = e.target.closest('[data-cl-edit]');
+          if (editBtn) {
+            const cl = state.checklists.find(c => c.id === editBtn.getAttribute('data-cl-edit'));
+            if (!cl) return;
+            document.getElementById('cl-edit-id').value = cl.id;
+            document.getElementById('cl-title').value = cl.title;
+            document.getElementById('cl-assignee').value = cl.assigneeId;
+            document.getElementById('cl-items-text').value = (cl.items || []).map(i => i.text).join('\n');
+            document.getElementById('btn-cl-submit').textContent = '💾 ذخیره ویرایش';
+            document.getElementById('btn-cl-cancel-edit').classList.remove('hidden');
+            document.getElementById('cl-title').focus();
+            return;
+          }
+          const delBtn = e.target.closest('[data-cl-del]');
+          if (delBtn) {
+            state.checklists = state.checklists.filter(c => c.id !== delBtn.getAttribute('data-cl-del'));
+            saveState();
+            renderWorkspaceView();
+            showToast('چک‌لیست حذف شد', 'info');
+          }
+        });
+
+        /* رویدادهای مودال پرونده */
+        function approveReportById(repId) {
+          const r = state.reports.find(x => x.id === repId);
+          if (!r || !state.currentUser) return;
+          r.status = 'approved'; r.rejectReason = '';
+          r.timeline.unshift({ time: getSystemTimestamp(), actor: state.currentUser.name, action: 'تایید نهایی گزارش ✅' });
+          saveState(); closeModal('case-detail-modal'); applyRoleUI();
+          showToast(`گزارش ${r.code} تایید شد ✅`);
+        }
+
+        document.querySelectorAll('#case-detail-modal .cd-inner-tab').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const tabKey = btn.getAttribute('data-cd-tab');
+            document.getElementById('cd-panel-details').classList.toggle('hidden', tabKey !== 'details');
+            document.getElementById('cd-panel-timeline').classList.toggle('hidden', tabKey !== 'timeline');
+            document.querySelectorAll('#case-detail-modal .cd-inner-tab').forEach(b => {
+              const act = b.getAttribute('data-cd-tab') === tabKey;
+              b.className = act ? 'cd-inner-tab py-2 rounded-xl text-xs font-black gold-gradient text-zinc-950' : 'cd-inner-tab py-2 rounded-xl text-xs font-bold text-zinc-600 dark:text-zinc-300';
+            });
+          });
+        });
+
+        document.getElementById('btn-cd-edit-record').addEventListener('click', () => loadReportIntoFormForEdit(state.activeCaseId));
+        document.getElementById('btn-cd-delete-record').addEventListener('click', () => deleteReportById(state.activeCaseId));
+        document.getElementById('btn-cd-approve').addEventListener('click', () => approveReportById(state.activeCaseId));
+        document.getElementById('btn-cd-toggle-delegate').addEventListener('click', () => {
+          document.getElementById('cd-reject-box').classList.add('hidden');
+          document.getElementById('cd-delegate-box').classList.toggle('hidden');
+        });
+        document.getElementById('btn-cd-toggle-reject').addEventListener('click', () => {
+          document.getElementById('cd-delegate-box').classList.add('hidden');
+          document.getElementById('cd-reject-box').classList.toggle('hidden');
+        });
+
+        document.getElementById('btn-cd-confirm-delegate').addEventListener('click', () => {
+          const r = state.reports.find(x => x.id === state.activeCaseId);
+          const targetUser = state.staff.find(s => s.id === document.getElementById('cd-delegate-user').value);
+          const note = document.getElementById('cd-delegate-note').value.trim();
+          if (!r || !targetUser) return;
+          r.status = 'assigned'; r.assigneeId = targetUser.id; r.assigneeName = targetUser.name;
+          r.timeline.unshift({ time: getSystemTimestamp(), actor: state.currentUser.name, action: `ارجاع به ${targetUser.name}${note ? ' (' + note + ')' : ''}` });
+          saveState(); closeModal('case-detail-modal'); applyRoleUI();
+          showToast(`به ${targetUser.name} ارجاع شد`, 'info');
+        });
+
+        document.getElementById('btn-cd-confirm-reject').addEventListener('click', () => {
+          const r = state.reports.find(x => x.id === state.activeCaseId);
+          const reason = document.getElementById('cd-reject-reason').value.trim();
+          if (!r || !reason) { showToast('دلیل برگشت را بنویسید', 'error'); return; }
+          r.status = 'rejected'; r.rejectReason = reason; r.assigneeId = r.techId; r.assigneeName = r.techName;
+          r.timeline.unshift({ time: getSystemTimestamp(), actor: state.currentUser.name, action: `برگشت جهت اصلاح: ${reason}` });
+          saveState(); closeModal('case-detail-modal'); applyRoleUI();
+          showToast('گزارش برگشت داده شد', 'info');
+        });
+
+        /* فیلترهای بایگانی */
+        document.getElementById('arch-search-input').addEventListener('input', e => { state.archFilters.search = e.target.value; renderArchiveView(); });
+        document.getElementById('arch-status-filter').addEventListener('change', e => { state.archFilters.status = e.target.value; renderArchiveView(); });
+
+        /* مدیریت پرسنل و مجوزهای تیک‌خور */
+        document.getElementById('staff-role-filters').addEventListener('click', e => {
+          const btn = e.target.closest('[data-staff-role]');
+          if (btn) { state.staffFilters.role = btn.getAttribute('data-staff-role'); renderStaffView(); }
+        });
+        document.getElementById('staff-search-input').addEventListener('input', e => { state.staffFilters.search = e.target.value; renderStaffView(); });
+
+        document.getElementById('btn-open-new-staff').addEventListener('click', () => {
+          document.getElementById('sem-id').value = '';
+          document.getElementById('staff-manage-form').reset();
+          document.getElementById('sem-role').value = 'apprentice';
+          document.getElementById('sem-active').checked = true;
+          renderStaffPermissionsCheckboxes(DEFAULT_PERMS_BY_ROLE.apprentice);
+          openModal('staff-edit-modal');
+        });
+
+        document.getElementById('sem-role').addEventListener('change', e => {
+          renderStaffPermissionsCheckboxes(DEFAULT_PERMS_BY_ROLE[e.target.value] || DEFAULT_PERMS_BY_ROLE.apprentice);
+        });
+
+        document.getElementById('btn-gen-pass').addEventListener('click', () => {
+          document.getElementById('sem-password').value = String(Math.floor(100000 + Math.random() * 900000));
+        });
+
+        document.getElementById('staff-cards-grid').addEventListener('click', e => {
+          const editBtn = e.target.closest('[data-edit-staff]');
+          if (editBtn) {
+            const stUser = state.staff.find(s => s.id === editBtn.getAttribute('data-edit-staff'));
+            if (!stUser) return;
+            document.getElementById('sem-id').value = stUser.id;
+            document.getElementById('sem-name').value = stUser.name;
+            document.getElementById('sem-phone').value = stUser.phone || '';
+            document.getElementById('sem-username').value = stUser.username;
+            document.getElementById('sem-password').value = stUser.password;
+            document.getElementById('sem-role').value = stUser.role;
+            document.getElementById('sem-active').checked = !!stUser.active;
+            renderStaffPermissionsCheckboxes(Object.assign({}, DEFAULT_PERMS_BY_ROLE[stUser.role], stUser.perms || {}));
+            openModal('staff-edit-modal'); return;
+          }
+          const delBtn = e.target.closest('[data-delete-staff]');
+          if (delBtn) {
+            state.staff = state.staff.filter(s => s.id !== delBtn.getAttribute('data-delete-staff'));
+            saveState(); renderStaffView(); applyRoleUI();
+            showToast('پرسنل حذف شد', 'info');
+          }
+        });
+
+        document.getElementById('staff-manage-form').addEventListener('submit', e => {
+          e.preventDefault();
+          const id = document.getElementById('sem-id').value;
+          const name = document.getElementById('sem-name').value.trim();
+          const phone = document.getElementById('sem-phone').value.trim();
+          const username = document.getElementById('sem-username').value.trim();
+          const password = document.getElementById('sem-password').value.trim();
+          const role = document.getElementById('sem-role').value;
+          const active = document.getElementById('sem-active').checked;
+
+          if (!name || !username || !password) { showToast('نام، نام کاربری و رمز الزامی است', 'error'); return; }
+
+          const perms = {};
+          document.querySelectorAll('#sem-permissions-grid [data-perm-key]').forEach(chk => {
+            perms[chk.getAttribute('data-perm-key')] = chk.checked;
+          });
+
+          if (id) {
+            const existing = state.staff.find(s => s.id === id);
+            if (existing) Object.assign(existing, { name, phone, username, password, role, active, perms });
+            showToast('تغییرات پرسنل ذخیره شد ✅');
+          } else {
+            if (state.staff.some(s => s.username.toLowerCase() === username.toLowerCase())) {
+              showToast('نام کاربری تکراری است', 'error'); return;
+            }
+            state.staff.push({ id: 'st-' + Date.now(), name, phone, username, password, role, active, status: 'آنلاین', bio: '', avatar: '', perms });
+            showToast('پرسنل جدید ثبت شد ✅');
+          }
+
+          saveState(); closeModal('staff-edit-modal'); renderStaffView(); applyRoleUI();
+        });
+      }
+
+      window.addEventListener('DOMContentLoaded', initEvents);
+    })();
+  </script>
+
+  <!-- پرده لودینگ درصدی -->
+  <script>
+    (() => {
+      const el = document.getElementById('vs-counter-curtain');
+      if (!el) return;
+      const panel = el.querySelector('.vs-counter-curtain-panel');
+      const digits = el.querySelector('.vs-counter-curtain-digits');
+      let p = 0;
+      const timer = setInterval(() => {
+        p = Math.min(100, p + Math.floor(18 + Math.random() * 22));
+        el.style.setProperty('--p', (p / 100).toFixed(2));
+        digits.textContent = p;
+        if (p >= 100) {
+          clearInterval(timer);
+          setTimeout(() => {
+            panel.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+            panel.style.transform = 'translateY(-100%)';
+            setTimeout(() => el.classList.add('is-gone'), 420);
+          }, 100);
+        }
+      }, 35);
+    })();
+  </script>
+</body>
+</html>
